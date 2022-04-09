@@ -1,7 +1,13 @@
 [package]
 name = "packwiz_modlist"
+description = "Creates a modlist from packwiz"
+authors = ["Ricky12Awesome"]
 version = "0.1.0"
 edition = "2021"
+license = "Apache-2.0"
+categories = ["command-line-utilities"]
+repository = "https://github.com/Ricky12Awesome/packwiz_modlist"
+homepage = "https://github.com/Ricky12Awesome/packwiz_modlist"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
