@@ -18,12 +18,6 @@ pub enum GlobalError {
   Unknown(#[from] Box<dyn Error>),
 }
 
-impl GlobalError {
-  fn unknown(err: impl Error + 'static) -> Self {
-    Self::Unknown(Box::new(err))
-  }
-}
-
 pub fn error_handler(err: GlobalError) {
   match err {
     GlobalError::Validation(err) => error!("Validation: {err}"),

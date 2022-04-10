@@ -40,7 +40,7 @@ async fn _main() -> GlobalResult<()> {
   let (mods, pack) = get_data(&args)?;
 
   println!("{pack:#?}");
-  println!("{mods:#?}");
+  println!("{:#?}", mods.into_iter().map(|it| it.name).collect::<Vec<_>>());
 
   Ok(())
 }
