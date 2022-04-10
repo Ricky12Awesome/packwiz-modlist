@@ -1,11 +1,20 @@
 use std::error::Error;
+use std::path::PathBuf;
 
 use log::error;
 use thiserror::Error;
 
-use crate::data::ValidationError;
-
 pub type GlobalResult<T> = Result<T, GlobalError>;
+
+#[derive(Debug, Error)]
+pub enum ValidationError {
+  #[error("{0} does not exist")]
+  DirNotExist(PathBuf),
+  #[error("{0} must be a directory")]
+  MustBeDir(PathBuf),
+  #[error("pack.toml was not found in {0}")]
+  PackNotFound(PathBuf),
+}
 
 #[derive(Debug, Error)]
 #[error("")]
@@ -15,6 +24,7 @@ pub enum GlobalError {
   TomlDeserialize(#[from] toml::de::Error),
   JsonDeserialize(#[from] serde_json::Error),
   Clap(#[from] clap::Error),
+  Reqwest(#[from] reqwest::Error),
   Unknown(#[from] Box<dyn Error>),
 }
 
@@ -25,6 +35,7 @@ pub fn error_handler(err: GlobalError) {
     GlobalError::TomlDeserialize(err) => error!("Toml: {err}"),
     GlobalError::JsonDeserialize(err) => error!("Json: {err}"),
     GlobalError::Clap(err) => error!("Clap: {err}"),
-    GlobalError::Unknown(err) => error!("Unknown: {err}")
+    GlobalError::Reqwest(err) => error!("Reqwest: {err}"),
+    GlobalError::Unknown(err) => error!("Unknown: {err}"),
   }
 }

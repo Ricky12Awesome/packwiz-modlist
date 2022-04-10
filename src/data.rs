@@ -1,82 +1,13 @@
-use std::path::PathBuf;
-
-use serde::{Deserialize, Serialize};
-use thiserror::Error;
-
 use GlobalError::Validation;
-use ValidationError::{DirNotExist, MustBeDir, PackNotFound};
 
 use crate::Args;
 use crate::error::{GlobalError, GlobalResult};
-use crate::util::read_toml_file;
+use crate::error::ValidationError::{DirNotExist, MustBeDir, PackNotFound};
+use crate::misc::read_toml_file;
+use crate::object::{CurseForgeProject, ModrinthProject, Pack, PackMods};
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Pack {
-  pub name: String,
-  pub author: String,
-  pub version: String,
-  #[serde(alias = "pack-format")]
-  pub pack_format: String,
-  pub versions: PackVersions,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct PackVersions {
-  pub fabric: Option<String>,
-  pub forge: Option<String>,
-  pub minecraft: String,
-}
-
-pub type PackMods = Vec<PackMod>;
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct PackMod {
-  pub name: String,
-  pub filename: String,
-  pub side: String,
-  pub download: PackModDownload,
-  pub update: PackModUpdate,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct PackModDownload {
-  pub url: String,
-  #[serde(alias = "hash-format")]
-  pub hash_format: String,
-  pub hash: String,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct PackModUpdate {
-  pub curseforge: Option<PackModUpdateCurseforge>,
-  pub modrinth: Option<PackModUpdateModrinth>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct PackModUpdateCurseforge {
-  #[serde(alias = "file-id")]
-  pub file_id: u32,
-  #[serde(alias = "project-id")]
-  pub project_id: u32,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct PackModUpdateModrinth {
-  #[serde(alias = "mod-id")]
-  pub mod_id: String,
-  #[serde(alias = "project-id")]
-  pub version: String,
-}
-
-#[derive(Debug, Error)]
-pub enum ValidationError {
-  #[error("{0} does not exist")]
-  DirNotExist(PathBuf),
-  #[error("{0} must be a directory")]
-  MustBeDir(PathBuf),
-  #[error("pack.toml was not found in {0}")]
-  PackNotFound(PathBuf),
-}
+const CURSEFORGE_API: &str = "https://addons-ecs.forgesvc.net/api/v2/addon";
+const MODRINTH_API: &str = "https://api.modrinth.com/v2/project";
 
 pub fn get_mods(args: &Args) -> GlobalResult<PackMods> {
   let path = if args.mods_custom {
@@ -113,4 +44,20 @@ pub fn get_data(args: &Args) -> GlobalResult<(PackMods, Pack)> {
       Ok((mods, pack))
     }
   }
+}
+
+pub async fn get_curseforge_project(id: u32) -> GlobalResult<CurseForgeProject> {
+  let url = format!("{CURSEFORGE_API}/{id}");
+  let response = reqwest::get(url).await?;
+  let project = response.json::<CurseForgeProject>().await?;
+
+  Ok(project)
+}
+
+pub async fn get_modrinth_project(id: String) -> GlobalResult<ModrinthProject> {
+  let url = format!("{MODRINTH_API}/{id}");
+  let response = reqwest::get(url).await?;
+  let project = response.json::<ModrinthProject>().await?;
+
+  Ok(project)
 }
