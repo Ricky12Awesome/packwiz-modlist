@@ -32,7 +32,7 @@ pub struct Args {
   #[clap(long, short = 'o', default_value = "modlist.md")]
   output: PathBuf,
   /// Format
-  #[clap(long, short = 'f', default_value = "({NAME})[{URL}] - {DESCRIPTION}")]
+  #[clap(long, short = 'f', default_value = "[{NAME}]({URL}) - {DESCRIPTION}\n")]
   format: String,
   /// Override the minecraft version
   #[clap(long)]
