@@ -8,8 +8,8 @@ license = "Apache-2.0"
 readme = "README.md"
 keywords = ["packwiz"]
 categories = ["command-line-utilities"]
-repository = "https://github.com/Ricky12Awesome/packwiz_modlist"
-homepage = "https://github.com/Ricky12Awesome/packwiz_modlist"
+repository = "https://github.com/Ricky12Awesome/packwiz-modlist"
+homepage = "https://github.com/Ricky12Awesome/packwiz-modlist"
 
 [[bin]]
 name = "packwizml"

@@ -1,3 +1,7 @@
+[![crates.io](https://img.shields.io/crates/v/packwiz-modlist.svg)](https://crates.io/crates/packwiz-modlist)
+[![docs.rs](https://docs.rs/packwiz-modlist/badge.svg)](https://crates.io/crates/packwiz-modlist)
+[![license](https://img.shields.io/github/license/Ricky12Awesome/packwiz-modlist)](https://github.com/Ricky12Awesome/packwiz-modlist/blob/main/LICENSE)
+
 # Packwiz ModList
 
 Creates a modlist from [packwiz](https://packwiz.infra.link/)
@@ -11,7 +15,7 @@ cargp install packwiz-modlist
 ## Usage
 
 if you run `packwizml` without any arguments it will try to 
-create a `modlist.md` in the directory you execute the command in
+create a `modlist.md` in the directory you executed the command in
 
 ### Options
 ```shell
