@@ -23,14 +23,16 @@ pub struct Args {
   #[clap(long, short = 'm', default_value = "mods", value_hint = clap::ValueHint::DirPath)]
   mods: PathBuf,
   /// Should mod path be it's own path instead of being relative to --path
-  #[clap(long, short = 'c')]
+  #[clap(long, short = 'M')]
   mods_custom: bool,
-  /// Overwrites output if it already exists
-  #[clap(long, short = 'F')]
-  force: bool,
   /// Output file
   #[clap(long, short = 'o', default_value = "modlist.md")]
   output: PathBuf,
+  #[clap(long, short = 'O')]
+  output_custom: bool,
+  /// Overwrites output if it already exists
+  #[clap(long, short = 'F')]
+  force: bool,
   /// Format
   #[clap(long, short = 'f', default_value = "[{NAME}]({URL}) - {DESCRIPTION}\n")]
   format: String,
