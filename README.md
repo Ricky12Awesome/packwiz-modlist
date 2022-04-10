@@ -9,7 +9,7 @@ Creates a modlist from [packwiz](https://packwiz.infra.link/)
 ## Install
 
 ```shell
-cargp install packwiz-modlist
+cargo install packwiz-modlist
 ```
 
 ## Usage
