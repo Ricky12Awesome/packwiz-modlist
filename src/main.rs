@@ -13,6 +13,11 @@ mod misc;
 mod object;
 mod output;
 
+#[cfg(debug_assertions)]
+const DEFAULT_LEVEL_FILTER: LevelFilter = LevelFilter::Debug;
+#[cfg(not(debug_assertions))]
+const DEFAULT_LEVEL_FILTER: LevelFilter = LevelFilter::Info;
+
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 pub struct Args {
@@ -33,38 +38,36 @@ pub struct Args {
   /// Overwrites output if it already exists
   #[clap(long, short = 'F')]
   force: bool,
+  /// Debug log (trace > debug > silent)
+  #[clap(long, short = 'd')]
+  debug: bool,
+  /// Trace log (trace > debug > silent)
+  #[clap(long, short = 't')]
+  trace: bool,
+  /// No log (trace > debug > silent)
+  #[clap(long, short = 's')]
+  silent: bool,
   /// Format
   #[clap(long, short = 'f', default_value = "[{NAME}]({URL}) - {DESCRIPTION}\n")]
   format: String,
-  /// Override the minecraft version
-  #[clap(long)]
-  mc: Option<String>,
-  /// Override the fabric version
-  #[clap(long)]
-  fabric: Option<String>,
-  /// Override the forge version
-  #[clap(long)]
-  forge: Option<String>,
-}
-
-async fn _main() -> GlobalResult<()> {
-  let args = Args::try_parse()?;
-
-  generate(&args).await?;
-
-  Ok(())
 }
 
 #[tokio::main]
 async fn main() {
-  #[cfg(debug_assertions)]
-  const LEVEL: LevelFilter = LevelFilter::Debug;
-  #[cfg(not(debug_assertions))]
-  const LEVEL: LevelFilter = LevelFilter::Info;
+  let args = Args::parse();
 
-  SimpleLogger::new().with_level(LEVEL).init().unwrap();
+  let level = match () {
+    _ if args.trace => LevelFilter::Trace,
+    _ if args.debug => LevelFilter::Debug,
+    _ if args.silent => LevelFilter::Off,
+    _ => DEFAULT_LEVEL_FILTER,
+  };
 
-  if let Err(err) = _main().await {
+  SimpleLogger::new().with_level(level).init().unwrap();
+
+  let result = generate(&args).await;
+
+  if let Err(err) = result {
     error_handler(err);
   }
 }

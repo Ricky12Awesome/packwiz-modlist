@@ -1,13 +1,19 @@
 [package]
-name = "packwiz_modlist"
+name = "packwiz-modlist"
 description = "Creates a modlist from packwiz"
 authors = ["Ricky12Awesome"]
 version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0"
+readme = "README.md"
+keywords = ["packwiz"]
 categories = ["command-line-utilities"]
 repository = "https://github.com/Ricky12Awesome/packwiz_modlist"
 homepage = "https://github.com/Ricky12Awesome/packwiz_modlist"
+
+[[bin]]
+name = "packwizml"
+path = "src/main.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -18,9 +24,7 @@ serde_json = "^1.0"
 clap = { version = "^3.1", features = ["cargo", "derive"] }
 toml = "^0.5"
 tokio = { version = "^1.17", features = ["full"] }
-tokio-stream = "^0.1"
 futures = "^0.3"
-anyhow = "^1.0"
 thiserror = "^1.0"
 color-eyre = "^0.5"
 log = "^0.4"
