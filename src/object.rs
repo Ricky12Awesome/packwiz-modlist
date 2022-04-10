@@ -62,6 +62,7 @@ pub struct PackModUpdateModrinth {
 // #[serde(rename_all = "camelCase")]
 pub struct CurseForgeProject {
   id: u32,
+  slug: String,
   name: String,
   summary: String,
 }
@@ -73,4 +74,52 @@ pub struct ModrinthProject {
   slug: String,
   title: String,
   description: String,
+}
+
+#[derive(Debug, Clone)]
+pub enum Project {
+  CurseForge(CurseForgeProject),
+  Modrinth(ModrinthProject),
+}
+
+impl From<CurseForgeProject> for Project {
+  fn from(project: CurseForgeProject) -> Self {
+    Project::CurseForge(project)
+  }
+}
+
+impl From<ModrinthProject> for Project {
+  fn from(project: ModrinthProject) -> Self {
+    Project::Modrinth(project)
+  }
+}
+
+impl Project {
+  fn url(&self) -> String {
+    match self {
+      Project::CurseForge(CurseForgeProject { slug, .. }) => format!("https://www.curseforge.com/minecraft/mc-mods/{}", slug),
+      Project::Modrinth(ModrinthProject { slug, .. }) => format!("https://modrinth.com/mod/{}", slug)
+    }
+  }
+
+  fn slug(&self) -> String {
+    match self {
+      Project::CurseForge(CurseForgeProject { slug, .. }) => slug.clone(),
+      Project::Modrinth(ModrinthProject { slug, .. }) => slug.clone()
+    }
+  }
+
+  fn title(&self) -> String {
+    match self {
+      Project::CurseForge(CurseForgeProject { name, .. }) => name.clone(),
+      Project::Modrinth(ModrinthProject { title, .. }) => title.clone()
+    }
+  }
+
+  fn description(&self) -> String {
+    match self {
+      Project::CurseForge(CurseForgeProject { summary, .. }) => summary.clone(),
+      Project::Modrinth(ModrinthProject { description, .. }) => description.clone()
+    }
+  }
 }

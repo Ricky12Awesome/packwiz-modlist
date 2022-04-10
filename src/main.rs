@@ -1,11 +1,11 @@
 use std::path::PathBuf;
 
 use clap::Parser;
-use log::{info, LevelFilter};
+use log::LevelFilter;
 use simple_logger::SimpleLogger;
 
-use crate::data::{get_curseforge_project, get_data, get_modrinth_project};
-use crate::error::{error_handler, GlobalResult};
+use crate::error::{error_handler, GlobalError, GlobalResult, ValidationError};
+use crate::output::generate;
 
 mod data;
 mod error;
@@ -25,11 +25,13 @@ pub struct Args {
   /// Should mod path be it's own path instead of being relative to --path
   #[clap(long, short = 'c')]
   mods_custom: bool,
+  /// Overwrites output if it already exists
+  #[clap(long, short = 'F')]
+  force: bool,
   /// Output file
   #[clap(long, short = 'o', default_value = "modlist.md")]
   output: PathBuf,
   /// Format
-  // TODO: Implement Format
   #[clap(long, short = 'f', default_value = "({NAME})[{URL}] - {DESCRIPTION}")]
   format: String,
   /// Override the minecraft version
@@ -45,30 +47,8 @@ pub struct Args {
 
 async fn _main() -> GlobalResult<()> {
   let args = Args::try_parse()?;
-  let (mods, _pack) = get_data(&args)?;
 
-  let curseforge_mods = mods.iter()
-    .filter_map(|it| it.update.curseforge.clone())
-    .map(|it| it.project_id)
-    .collect::<Vec<_>>();
-
-  let modrinth_mods = mods.iter()
-    .filter_map(|it| it.update.modrinth.clone())
-    .map(|it| it.mod_id)
-    .collect::<Vec<_>>();
-
-  // println!("{curseforge_mods:?}");
-  // println!("{modrinth_mods:?}");
-
-  for curseforge_mod in curseforge_mods {
-    let project = get_curseforge_project(curseforge_mod).await?;
-    info!("{project:?}");
-  }
-
-  for modrinth_mod in modrinth_mods {
-    let project = get_modrinth_project(modrinth_mod).await?;
-    info!("{project:?}");
-  }
+  generate(&args).await?;
 
   Ok(())
 }

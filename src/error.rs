@@ -8,6 +8,8 @@ pub type GlobalResult<T> = Result<T, GlobalError>;
 
 #[derive(Debug, Error)]
 pub enum ValidationError {
+  #[error("{0} already exists, to overwrite run command again with '--force' or '-F'")]
+  OutputAlreadyExits(PathBuf),
   #[error("{0} does not exist")]
   DirNotExist(PathBuf),
   #[error("{0} must be a directory")]
