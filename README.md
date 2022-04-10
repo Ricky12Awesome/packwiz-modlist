@@ -10,41 +10,54 @@ cargp install packwiz-modlist
 
 ## Usage
 
-Run this inside the packwiz project directory, and it will create a `modlist.md` in that directory
+if you run `packwizml` without any arguments it will try to 
+create a `modlist.md` in the directory you execute the command in
 
+### Options
 ```shell
-packwizml 
+# Displays help
+packwizml --help # short: -h
+
+# Specify a project path
+#
+# other path options are relative to this by default
+# to disable this, add '-O' for output and '-M' for mods
+packwizml --path ./ # short: -p
+
+# Specify a mods directory
+#
+# to disable being relative to '--path' add '-O'
+packwizml --output modlist.md # short: -o
+
+# Specify a mods directory
+#
+# to disable being relative to '--path' add '-M'
+packwizml --mods ./mods # short: -m
+
+# Overwrite output file if it exists
+packwizml --force # short: -F
+
+# Priority: trace > debug > silent
+# Shows up to trace info (more then debug)
+packwizml --trace # short: -t
+
+# Shows up to debug info
+packwizml --debug # short: -d
+
+# Silents logs info
+packwizml --silent # short: -s
 ```
 
-Run this for a full list of arguments
+### Format
+
+Specify a custom format
+default: `[{NAME}]({URL}) - {DESCRIPTION}\n`
 
 ```shell
-packwizml --help
-packwizml -h # Short version
+packwizml --format "[{NAME}]({URL}) - {DESCRIPTION}\n" # short: -f
 ```
 
-If you want to specify a packwiz project directory you can do
-
-```shell
-packwizml --path ./
-packwizml -p ./ # Short version
-```
-
-If you want a custom output path
-
-```shell
-packwizml --output modlist.md
-packwizml -o modlist.md # Short version
-```
-
-If you want a custom format
-
-```shell
-packwizml --format "[{NAME}]({URL}) - {DESCRIPTION}\n"
-packwizml -f "[{NAME}]({URL}) - {DESCRIPTION}\n" # Short version
-```
-
-## Placeholders
+#### Placeholders
 
 | Placeholder                 | Description                         |
 |:----------------------------|:------------------------------------|
@@ -57,3 +70,4 @@ packwizml -f "[{NAME}]({URL}) - {DESCRIPTION}\n" # Short version
 - Support other formats
 - Cache
 - More placeholders
+- CI/CD Integration
