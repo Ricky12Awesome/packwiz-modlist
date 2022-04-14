@@ -2,7 +2,7 @@
 name = "packwiz-modlist"
 description = "Creates a modlist from packwiz"
 authors = ["Ricky12Awesome"]
-version = "1.0.1"
+version = "1.0.2"
 edition = "2021"
 license = "Apache-2.0"
 readme = "README.md"
@@ -26,6 +26,5 @@ toml = "^0.5"
 tokio = { version = "^1.17", features = ["full"] }
 futures = "^0.3"
 thiserror = "^1.0"
-color-eyre = "^0.5"
 log = "^0.4"
 simple_logger = { version = "^2.1", default-features = false, features = ["colored"] }

@@ -1,5 +1,4 @@
 [![crates.io](https://img.shields.io/crates/v/packwiz-modlist.svg)](https://crates.io/crates/packwiz-modlist)
-[![docs.rs](https://docs.rs/packwiz-modlist/badge.svg)](https://crates.io/crates/packwiz-modlist)
 [![license](https://img.shields.io/github/license/Ricky12Awesome/packwiz-modlist)](https://github.com/Ricky12Awesome/packwiz-modlist/blob/main/LICENSE)
 
 # Packwiz ModList
@@ -71,7 +70,8 @@ packwizml --format "[{NAME}]({URL}) - {DESCRIPTION}\n" # short: -f
 | `{SLUG}`                    | Gets the slug of the project        |
 
 ## Todo
-- Support other formats
-- Cache
-- More placeholders
-- CI/CD Integration
+* [ ] CI/CD Integration
+* [ ] Caching
+* [ ] JSON Output (to use in programs/scripts)
+* [ ] Templates (kinda like preset-format)
+* [ ] More Placeholders
