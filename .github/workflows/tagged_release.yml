@@ -61,7 +61,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.BINARY_NAME }}-${{ matrix.job.os-name }}-${{ matrix.job.architecture }}
-          path: target/${{ matrix.job.target }}/release/${{ env.BINARY_NAME }}${{ matrix.job.binary-postfix }}
+          path: target/release/${{ env.BINARY_NAME }}${{ matrix.job.binary-postfix }}
           retention-days: 1
 
   release:
