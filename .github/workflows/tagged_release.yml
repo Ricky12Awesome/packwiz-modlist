@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  PROJECT_NAME: packwiz_modlist
+  BINARY_NAME: packwizml
 
 jobs:
   artifact:
@@ -25,6 +25,18 @@ jobs:
             architecture: x86_64
             binary-postfix: ".exe"
             use-cross: false
+          - os: ubuntu-latest
+            os-name: linux
+            target: x86_64-unknown-linux-gnu
+            architecture: x86_64
+            binary-postfix: ""
+            use-cross: false
+          - os: macos-latest
+            os-name: macos
+            target: x86_64-apple-darwin
+            architecture: x86_64
+            binary-postfix: ""
+            use-cross: false
 
     steps:
       - name: Checkout
@@ -37,11 +49,19 @@ jobs:
           profile: minimal
           override: true
 
+      - name: Build Binary
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          use-cross: ${{ matrix.job.use-cross }}
+          toolchain: ${{ matrix.rust }}
+          args: --release
+
       - name: Upload Binary
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.PROJECT_NAME }}-${{ matrix.job.os-name }}-${{ matrix.job.architecture }}
-          path: target/release/${{ env.PROJECT_NAME }}-${{ matrix.job.os-name }}-${{ matrix.job.architecture }}${{ matrix.job.binary-postfix }}
+          name: ${{ env.BINARY_NAME }}-${{ matrix.job.os-name }}-${{ matrix.job.architecture }}
+          path: target/${{ matrix.rust }}/${{ env.BINARY_NAME }}${{ matrix.job.binary-postfix }}
           retention-days: 1
 
   release:
