@@ -87,7 +87,7 @@ pub async fn get_project(pack_mod: PackMod) -> GlobalResult<Project> {
   unreachable!()
 }
 
-pub async fn get_projects(mods: PackMods) -> GlobalResult<Vec<Project>> {
+pub async fn get_projects(mods: &PackMods) -> GlobalResult<Vec<Project>> {
   let modrinth_ids = mods.iter()
     .filter_map(|it| it.update.modrinth.clone())
     .map(|it| it.mod_id)

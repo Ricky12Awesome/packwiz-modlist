@@ -48,12 +48,13 @@ impl GlobalErrorCustom {
 }
 
 impl GlobalError {
+  #[allow(unused)]
   pub fn custom(typ: impl ToString, msg: impl ToString) -> Self {
     GlobalErrorCustom::new(typ, msg).into()
   }
 }
 
-pub fn error_handler(err: GlobalError) {
+pub fn handle_error(err: &GlobalError) {
   match err {
     GlobalError::Validation(err) => error!("Validation: {err}"),
     GlobalError::FileIO(err) => error!("File: {err}"),

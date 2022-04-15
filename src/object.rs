@@ -61,22 +61,24 @@ pub struct PackModUpdateModrinth {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 // #[serde(rename_all = "camelCase")]
 pub struct CurseForgeProject {
-  id: u32,
-  slug: String,
-  name: String,
-  summary: String,
+  pub id: u32,
+  pub slug: String,
+  pub name: String,
+  pub summary: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 // #[serde(rename_all = "camelCase")]
 pub struct ModrinthProject {
-  id: String,
-  slug: String,
-  title: String,
-  description: String,
+  pub id: String,
+  pub slug: String,
+  pub title: String,
+  pub description: String,
 }
 
-#[derive(Debug, Clone)]
+pub type Projects = Vec<Project>;
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Project {
   CurseForge(CurseForgeProject),
   Modrinth(ModrinthProject),
@@ -122,4 +124,11 @@ impl Project {
       Project::Modrinth(ModrinthProject { description, .. }) => description.clone()
     }
   }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Data {
+  pub pack: Pack,
+  pub mods: PackMods,
+  pub projects: Projects,
 }

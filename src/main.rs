@@ -1,15 +1,14 @@
 use std::fmt::Display;
 use std::path::PathBuf;
-use std::str::FromStr;
 
 use clap::Parser;
 use colored::Colorize;
 use log::LevelFilter;
 use simple_logger::SimpleLogger;
 
-use crate::error::{error_handler, GlobalError, GlobalResult, ValidationError};
+use crate::error::{GlobalError, GlobalResult, handle_error, ValidationError};
 use crate::misc::ColorMode;
-use crate::output::generate;
+use crate::output::{generate, write_to_file};
 
 mod data;
 mod error;
@@ -49,6 +48,9 @@ pub struct Args {
   /// Prints about this program
   #[clap(long, global = true)]
   about: bool,
+  /// Prints json output
+  #[clap(long, global = true)]
+  json: bool,
   /// Specify a custom format
   #[clap(long, short = 'f', default_value = "[{NAME}]({URL}) - {DESCRIPTION}\n")]
   format: String,
@@ -67,6 +69,8 @@ async fn main() {
   #[cfg(windows)]
   colored::control::set_virtual_terminal(true).unwrap();
 
+  SimpleLogger::new().with_level(args.log_level).init().unwrap();
+
   if args.about {
     fn about(k: &str, v: impl Display) {
       println!("{}{}{}", k.bright_purple(), ": ".white(), v);
@@ -79,14 +83,26 @@ async fn main() {
     about("License", env!("CARGO_PKG_LICENSE").bright_cyan());
     about("Repository", env!("CARGO_PKG_REPOSITORY").bright_blue());
 
+
     return;
   }
 
-  SimpleLogger::new().with_level(args.log_level).init().unwrap();
-
-  let result = generate(&args).await;
+  let result = run(&args).await;
 
   if let Err(err) = result {
-    error_handler(err);
+    handle_error(&err);
   }
 }
+
+async fn run(args: &Args) -> GlobalResult<()> {
+  let data = generate(args).await?;
+
+  if args.json {
+    println!("{}", serde_json::to_string_pretty(&data).unwrap());
+
+    return Ok(());
+  }
+
+  write_to_file(args, &data).await
+}
+

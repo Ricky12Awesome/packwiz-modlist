@@ -43,6 +43,9 @@ packwizml --mods ./mods # short: -m
 # Overwrite output file if it exists
 packwizml --force # short: -F
 
+# Prints out all data as json so it can be used in scripts
+packwizml --json
+
 # Sets the verbosity of logging
 # possible values: Off, Error, Warn, Info, Debug, Trace
 packwizml --log-level=Off # short: -v
@@ -70,6 +73,6 @@ packwizml --format "[{NAME}]({URL}) - {DESCRIPTION}\n" # short: -f
 ## Todo
 * [ ] CI/CD Integration
 * [ ] Caching
-* [ ] JSON Output (to use in programs/scripts)
+* [x] JSON Output (to use in programs/scripts)
 * [ ] Templates (kinda like preset-format)
 * [ ] More Placeholders
