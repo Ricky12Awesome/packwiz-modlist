@@ -57,11 +57,21 @@ jobs:
           toolchain: ${{ matrix.rust }}
           args: --release
 
+      - name: Setup Environment Variables
+        shell: bash
+        run: |
+          echo "SRC=target/release/${{ env.BINARY_NAME }}${{ matrix.job.binary-postfix }}" >> $GITHUB_ENV
+          echo "DST=target/release/${{ env.BINARY_NAME }}-${{ matrix.job.os-name }}-${{ matrix.job.architecture }}${{ matrix.job.binary-postfix }}" >> $GITHUB_ENV
+
+      - name: Rename File
+        shell: bash
+        run: mv ${{ env.SRC }} ${{ env.DST }}
+
       - name: Upload Binary
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.BINARY_NAME }}-${{ matrix.job.os-name }}-${{ matrix.job.architecture }}
-          path: target/release/${{ env.BINARY_NAME }}${{ matrix.job.binary-postfix }}
+          path: ${{ env.DST }}
           retention-days: 1
 
   release:
