@@ -83,7 +83,6 @@ async fn main() {
     about("License", env!("CARGO_PKG_LICENSE").bright_cyan());
     about("Repository", env!("CARGO_PKG_REPOSITORY").bright_blue());
 
-
     return;
   }
 
