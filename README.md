@@ -21,6 +21,9 @@ create a `modlist.md` in the directory you executed the command in
 # Displays help
 packwizml --help # short: -h
 
+# Prints about this program
+packwizml --about
+
 # Specify a project path
 #
 # other path options are relative to this by default
@@ -40,15 +43,10 @@ packwizml --mods ./mods # short: -m
 # Overwrite output file if it exists
 packwizml --force # short: -F
 
-# Priority: trace > debug > silent
-# Shows up to trace info (more then debug)
-packwizml --trace # short: -t
+# Sets the verbosity of logging
+# possible values: Off, Error, Warn, Info, Debug, Trace
+packwizml --log-level=Off # short: -v
 
-# Shows up to debug info
-packwizml --debug # short: -d
-
-# Silents logs info
-packwizml --silent # short: -s
 ```
 
 ### Format

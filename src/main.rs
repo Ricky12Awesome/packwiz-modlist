@@ -1,6 +1,8 @@
+use std::fmt::Display;
 use std::path::PathBuf;
 
 use clap::Parser;
+use colored::Colorize;
 use log::LevelFilter;
 use simple_logger::SimpleLogger;
 
@@ -36,7 +38,7 @@ pub struct Args {
   /// Overwrites output if it already exists
   #[clap(long, short = 'F')]
   force: bool,
-  /// Set Log level
+  /// Sets the verbosity of logging
   #[clap(long, short = 'v', ignore_case = true, default_value = "Warn", possible_values = LOG_VALUES)]
   log_level: LevelFilter,
   /// Prints about this program
@@ -55,7 +57,17 @@ async fn main() {
   colored::control::set_virtual_terminal(true).unwrap();
 
   if args.about {
-    println!("E");
+    fn about(k: &str, v: impl Display) {
+      println!("{}{}{}", k.bright_purple(), ": ".white(), v);
+    }
+
+    about("Name", env!("CARGO_PKG_NAME").bright_yellow());
+    about("Version", env!("CARGO_PKG_VERSION").bright_red());
+    about("Author", env!("CARGO_PKG_AUTHORS").bright_yellow());
+    about("Description", env!("CARGO_PKG_DESCRIPTION").bright_yellow());
+    about("License", env!("CARGO_PKG_LICENSE").bright_cyan());
+    about("Repository", env!("CARGO_PKG_REPOSITORY").bright_blue());
+
     return;
   }
 
