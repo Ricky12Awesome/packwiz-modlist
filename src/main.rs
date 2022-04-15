@@ -13,10 +13,7 @@ mod misc;
 mod object;
 mod output;
 
-#[cfg(debug_assertions)]
-const DEFAULT_LEVEL_FILTER: LevelFilter = LevelFilter::Debug;
-#[cfg(not(debug_assertions))]
-const DEFAULT_LEVEL_FILTER: LevelFilter = LevelFilter::Info;
+const LOG_VALUES: [&str; 6] = ["Off", "Error", "Warn", "Info", "Debug", "Trace"];
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
@@ -39,15 +36,12 @@ pub struct Args {
   /// Overwrites output if it already exists
   #[clap(long, short = 'F')]
   force: bool,
-  /// Debug log (trace > debug > silent)
-  #[clap(long, short = 'd')]
-  debug: bool,
-  /// Trace log (trace > debug > silent)
-  #[clap(long, short = 't')]
-  trace: bool,
-  /// Silent log (trace > debug > silent)
-  #[clap(long, short = 's')]
-  silent: bool,
+  /// Set Log level
+  #[clap(long, short = 'v', ignore_case = true, default_value = "Warn", possible_values = LOG_VALUES)]
+  log_level: LevelFilter,
+  /// Prints about this program
+  #[clap(long, global = true)]
+  about: bool,
   /// Specify a custom format
   #[clap(long, short = 'f', default_value = "[{NAME}]({URL}) - {DESCRIPTION}\n")]
   format: String,
@@ -56,15 +50,16 @@ pub struct Args {
 #[tokio::main]
 async fn main() {
   let args = Args::parse();
+  colored::control::set_override(true);
+  #[cfg(windows)]
+  colored::control::set_virtual_terminal(true).unwrap();
 
-  let level = match () {
-    _ if args.trace => LevelFilter::Trace,
-    _ if args.debug => LevelFilter::Debug,
-    _ if args.silent => LevelFilter::Off,
-    _ => DEFAULT_LEVEL_FILTER,
-  };
+  if args.about {
+    println!("E");
+    return;
+  }
 
-  SimpleLogger::new().with_level(level).init().unwrap();
+  SimpleLogger::new().with_level(args.log_level).init().unwrap();
 
   let result = generate(&args).await;
 
