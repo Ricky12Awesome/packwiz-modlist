@@ -1,5 +1,6 @@
 use std::fmt::Display;
 use std::path::PathBuf;
+use std::str::FromStr;
 
 use clap::Parser;
 use colored::Colorize;
@@ -7,6 +8,7 @@ use log::LevelFilter;
 use simple_logger::SimpleLogger;
 
 use crate::error::{error_handler, GlobalError, GlobalResult, ValidationError};
+use crate::misc::ColorMode;
 use crate::output::generate;
 
 mod data;
@@ -16,6 +18,7 @@ mod object;
 mod output;
 
 const LOG_VALUES: [&str; 6] = ["Off", "Error", "Warn", "Info", "Debug", "Trace"];
+const COLOR_MODES: [&str; 3] = ["Auto", "Always", "Never"];
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
@@ -41,6 +44,8 @@ pub struct Args {
   /// Sets the verbosity of logging
   #[clap(long, short = 'v', ignore_case = true, default_value = "Warn", possible_values = LOG_VALUES)]
   log_level: LevelFilter,
+  #[clap(long, short = 'c', ignore_case = true, default_value = "Auto", possible_values = COLOR_MODES)]
+  color_mode: ColorMode,
   /// Prints about this program
   #[clap(long, global = true)]
   about: bool,
@@ -52,7 +57,13 @@ pub struct Args {
 #[tokio::main]
 async fn main() {
   let args = Args::parse();
-  colored::control::set_override(true);
+
+  match args.color_mode {
+    ColorMode::Auto => (),
+    ColorMode::Always => colored::control::set_override(true),
+    ColorMode::Never => colored::control::set_override(false),
+  }
+
   #[cfg(windows)]
   colored::control::set_virtual_terminal(true).unwrap();
 

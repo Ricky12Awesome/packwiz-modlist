@@ -27,7 +27,30 @@ pub enum GlobalError {
   JsonDeserialize(#[from] serde_json::Error),
   Clap(#[from] clap::Error),
   Reqwest(#[from] reqwest::Error),
+  Custom(#[from] GlobalErrorCustom),
   Unknown(#[from] Box<dyn Error>),
+}
+
+#[derive(Debug, Error)]
+#[error("{typ}: {msg}")]
+pub struct GlobalErrorCustom {
+  typ: String,
+  msg: String,
+}
+
+impl GlobalErrorCustom {
+  pub fn new(typ: impl ToString, msg: impl ToString) -> Self {
+    Self {
+      typ: typ.to_string(),
+      msg: msg.to_string(),
+    }
+  }
+}
+
+impl GlobalError {
+  pub fn custom(typ: impl ToString, msg: impl ToString) -> Self {
+    GlobalErrorCustom::new(typ, msg).into()
+  }
 }
 
 pub fn error_handler(err: GlobalError) {
@@ -38,6 +61,7 @@ pub fn error_handler(err: GlobalError) {
     GlobalError::JsonDeserialize(err) => error!("Json: {err}"),
     GlobalError::Clap(err) => error!("Clap: {err}"),
     GlobalError::Reqwest(err) => error!("Reqwest: {err}"),
+    GlobalError::Custom(err) => error!("{err}"),
     GlobalError::Unknown(err) => error!("Unknown: {err}"),
   }
 }
