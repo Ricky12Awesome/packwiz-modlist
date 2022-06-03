@@ -24,16 +24,7 @@ pub struct PackMod {
   pub name: String,
   pub filename: String,
   pub side: String,
-  pub download: PackModDownload,
   pub update: PackModUpdate,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PackModDownload {
-  pub url: String,
-  #[serde(alias = "hash-format")]
-  pub hash_format: String,
-  pub hash: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -99,8 +90,15 @@ impl From<ModrinthProject> for Project {
 impl Project {
   pub fn url(&self) -> String {
     match self {
-      Project::CurseForge(CurseForgeProject { slug, .. }) => format!("https://www.curseforge.com/minecraft/mc-mods/{}", slug),
-      Project::Modrinth(ModrinthProject { slug, .. }) => format!("https://modrinth.com/mod/{}", slug)
+      Project::CurseForge(CurseForgeProject { slug, .. }) => format!("https://www.curseforge.com/minecraft/mc-mods/{slug}"),
+      Project::Modrinth(ModrinthProject { id, .. }) => format!("https://modrinth.com/mod/{id}")
+    }
+  }
+
+  pub fn id(&self) -> String {
+    match self {
+      Project::CurseForge(CurseForgeProject { id, .. }) => id.to_string(),
+      Project::Modrinth(ModrinthProject { id, .. }) => id.clone()
     }
   }
 

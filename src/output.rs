@@ -13,7 +13,9 @@ pub fn display_project(format: &str, project: &Project) -> String {
     .replace("{DESCRIPTION}", &project.description())
     .replace("{SUMMARY}", &project.description())
     .replace("{URL}", &project.url())
+    .replace("{ID}", &project.id())
     .replace("{SLUG}", &project.slug())
+    .replace("\\n", "\n")
 }
 
 pub async fn generate(args: &Args) -> GlobalResult<Data> {
@@ -29,9 +31,9 @@ pub async fn write_projects<W>(args: &Args, data: &Data, writer: &mut W) -> Glob
   for project in &data.projects {
     let display = display_project(&args.format, project);
 
-    info!("{}", &display);
+    info!("{display}");
 
-    let display = format!("{}\n", display);
+    let display = format!("{display}\n");
 
     writer.write_all(&display.into_bytes()).await?;
   }
