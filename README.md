@@ -86,7 +86,7 @@ packwizml --reverse # short: -r
 | `None`                       | Undetermined                     |
 
 ## Todo
-* [ ] Sorting
+* [x] Sorting
 * [ ] Automated Tests
 * [ ] Packaging outside of cargo
 * [ ] Packaging with Completions
