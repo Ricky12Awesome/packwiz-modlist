@@ -91,35 +91,35 @@ impl Project {
   pub fn url(&self) -> String {
     match self {
       Project::CurseForge(CurseForgeProject { slug, .. }) => format!("https://www.curseforge.com/minecraft/mc-mods/{slug}"),
-      Project::Modrinth(ModrinthProject { id, .. }) => format!("https://modrinth.com/mod/{id}")
+      Project::Modrinth(ModrinthProject { id, .. }) => format!("https://modrinth.com/mod/{id}"),
     }
   }
 
   pub fn id(&self) -> String {
     match self {
       Project::CurseForge(CurseForgeProject { id, .. }) => id.to_string(),
-      Project::Modrinth(ModrinthProject { id, .. }) => id.clone()
+      Project::Modrinth(ModrinthProject { id, .. }) => id.clone(),
     }
   }
 
   pub fn slug(&self) -> String {
     match self {
       Project::CurseForge(CurseForgeProject { slug, .. }) => slug.clone(),
-      Project::Modrinth(ModrinthProject { slug, .. }) => slug.clone()
+      Project::Modrinth(ModrinthProject { slug, .. }) => slug.clone(),
     }
   }
 
   pub fn title(&self) -> String {
     match self {
       Project::CurseForge(CurseForgeProject { name, .. }) => name.clone(),
-      Project::Modrinth(ModrinthProject { title, .. }) => title.clone()
+      Project::Modrinth(ModrinthProject { title, .. }) => title.clone(),
     }
   }
 
   pub fn description(&self) -> String {
     match self {
       Project::CurseForge(CurseForgeProject { summary, .. }) => summary.clone(),
-      Project::Modrinth(ModrinthProject { description, .. }) => description.clone()
+      Project::Modrinth(ModrinthProject { description, .. }) => description.clone(),
     }
   }
 }

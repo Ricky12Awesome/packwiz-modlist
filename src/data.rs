@@ -2,11 +2,11 @@ use futures::future::JoinAll;
 
 use GlobalError::Validation;
 
-use crate::Args;
-use crate::error::{GlobalError, GlobalResult};
 use crate::error::ValidationError::{DirNotExist, MustBeDir, PackNotFound};
+use crate::error::{GlobalError, GlobalResult};
 use crate::misc::read_toml_file;
 use crate::object::{CurseForgeProject, ModrinthProject, Pack, PackMod, PackMods, Project};
+use crate::Args;
 
 const CURSEFORGE_API: &str = "https://addons-ecs.forgesvc.net/api/v2";
 const MODRINTH_API: &str = "https://api.modrinth.com/v2";
@@ -21,13 +21,12 @@ pub fn get_mods(args: &Args) -> GlobalResult<PackMods> {
   match () {
     _ if !path.exists() => Err(Validation(DirNotExist(path))),
     _ if !path.is_dir() => Err(Validation(MustBeDir(path))),
-    _ => {
-      path.read_dir()?
-        .filter_map(|it| it.ok())
-        .filter(|it| it.file_name().to_string_lossy().ends_with(".toml"))
-        .map(|it| read_toml_file(it.path()))
-        .collect::<GlobalResult<PackMods>>()
-    }
+    _ => path
+      .read_dir()?
+      .filter_map(|it| it.ok())
+      .filter(|it| it.file_name().to_string_lossy().ends_with(".toml"))
+      .map(|it| read_toml_file(it.path()))
+      .collect::<GlobalResult<PackMods>>(),
   }
 }
 
@@ -88,7 +87,8 @@ pub async fn get_project(pack_mod: PackMod) -> GlobalResult<Project> {
 }
 
 pub async fn get_projects(mods: &PackMods) -> GlobalResult<Vec<Project>> {
-  let modrinth_ids = mods.iter()
+  let modrinth_ids = mods
+    .iter()
     .filter_map(|it| it.update.modrinth.clone())
     .map(|it| it.mod_id)
     .collect::<Vec<_>>();
@@ -100,7 +100,8 @@ pub async fn get_projects(mods: &PackMods) -> GlobalResult<Vec<Project>> {
     .collect::<Vec<_>>();
 
   // Don't know how to do batch calls with curseforge api since there isn't much documentation on it
-  let curseforge = mods.iter()
+  let curseforge = mods
+    .iter()
     .filter_map(|it| it.update.curseforge.clone())
     .map(|it| it.project_id)
     .map(get_curseforge_project)

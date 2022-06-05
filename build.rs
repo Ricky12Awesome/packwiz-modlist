@@ -9,18 +9,13 @@ use clap_complete::{generate_to, Generator, Shell};
 include!("src/args.rs");
 
 fn generate_completions<G, P>(shell: G, dir: P) -> anyhow::Result<()>
-  where
-    G: Generator,
-    P: Into<OsString>
+where
+  G: Generator,
+  P: Into<OsString>,
 {
   let mut command = Args::command();
 
-  generate_to(
-    shell,
-    &mut command,
-    "packwizml",
-    dir,
-  )?;
+  generate_to(shell, &mut command, "packwizml", dir)?;
 
   Ok(())
 }

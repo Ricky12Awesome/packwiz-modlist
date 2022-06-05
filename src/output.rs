@@ -2,9 +2,9 @@ use log::info;
 use tokio::fs::File;
 use tokio::io::{AsyncWrite, AsyncWriteExt};
 
-use crate::{Args, GlobalError, GlobalResult, ValidationError};
 use crate::data::{get_data, get_projects};
 use crate::object::{Data, Project};
+use crate::{Args, GlobalError, GlobalResult, ValidationError};
 
 pub fn display_project(format: &str, project: &Project) -> String {
   format
@@ -26,7 +26,8 @@ pub async fn generate(args: &Args) -> GlobalResult<Data> {
 }
 
 pub async fn write_projects<W>(args: &Args, data: &Data, writer: &mut W) -> GlobalResult<()>
-  where W: AsyncWrite + Unpin
+where
+  W: AsyncWrite + Unpin,
 {
   for project in &data.projects {
     let display = display_project(&args.format, project);
