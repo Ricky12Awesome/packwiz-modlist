@@ -6,7 +6,7 @@ use simple_logger::SimpleLogger;
 
 use crate::args::{Args, ColorMode};
 use crate::error::{handle_error, GlobalError, GlobalResult, ValidationError};
-use crate::output::{generate, write_to_file};
+use crate::output::{generate, write};
 
 mod args;
 mod data;
@@ -61,5 +61,5 @@ async fn run(args: &Args) -> GlobalResult<()> {
     return Ok(());
   }
 
-  write_to_file(args, &data).await
+  write(args, &data).await
 }

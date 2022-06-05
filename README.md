@@ -13,11 +13,11 @@ cargo install packwiz-modlist
 
 ## Usage
 
-if you run `packwizml` without any arguments it will try to 
-create a `modlist.md` in the directory you executed the command in
+if you run `packwizml` without any arguments it will print the output with the default format,
+you can redirect thos output using the `-o` flag or using `> filename`
 
 ### Options
-```shell
+```sh
 # Displays help
 packwizml --help # short: -h
 
@@ -50,29 +50,26 @@ packwizml --json
 # possible values: Off, Error, Warn, Info, Debug, Trace
 packwizml --log-level=Off # short: -v
 
-```
-
-### Format
-
-Specify a custom format
-default: `[{NAME}]({URL}) - {DESCRIPTION}\n`
-
-```shell
-packwizml --format "[{NAME}]({URL}) - {DESCRIPTION}\n" # short: -f
+# Specify a custom format
+# default: `- [{NAME}]({URL}) - {DESCRIPTION}\n`
+packwizml --format "- [{NAME}]({URL}) - {DESCRIPTION}\n" # short: -f
 ```
 
 #### Placeholders
 
 | Placeholder                 | Description                         |
 |:----------------------------|:------------------------------------|
+| `{INDEX}`                   | Gets the index of the proejct list  |
 | `{NAME}`,`{TITLE}`          | Gets the name of the project        |
 | `{DESCRIPTION}`,`{SUMMARY}` | Gets the description of the project |
 | `{URL}`                     | Gets the URL of the project         |
 | `{SLUG}`                    | Gets the slug of the project        |
+| `{ID}`                      | Gets the id of the project          |
 
 ## Todo
-* [ ] CI/CD Integration
-* [ ] Caching
-* [x] JSON Output (to use in programs/scripts)
+* [ ] Sorting
+* [ ] Automated Tests
+* [ ] Packaging outside of cargo
+* [ ] Packaging with Completions
+* [ ] Caching (to avoid fetching project by url, if same version)
 * [ ] Templates (kinda like preset-format)
-* [ ] More Placeholders

@@ -1,13 +1,14 @@
 use log::info;
 use tokio::fs::File;
-use tokio::io::{AsyncWrite, AsyncWriteExt};
+use tokio::io::{stdout, AsyncWrite, AsyncWriteExt};
 
 use crate::data::{get_data, get_projects};
 use crate::object::{Data, Project};
 use crate::{Args, GlobalError, GlobalResult, ValidationError};
 
-pub fn display_project(format: &str, project: &Project) -> String {
+pub fn display_project(index: usize, format: &str, project: &Project) -> String {
   format
+    .replace("{INDEX}", &index.to_string())
     .replace("{TITLE}", &project.title())
     .replace("{NAME}", &project.title())
     .replace("{DESCRIPTION}", &project.description())
@@ -29,8 +30,8 @@ pub async fn write_projects<W>(args: &Args, data: &Data, writer: &mut W) -> Glob
 where
   W: AsyncWrite + Unpin,
 {
-  for project in &data.projects {
-    let display = display_project(&args.format, project);
+  for (index, project) in data.projects.iter().enumerate() {
+    let display = display_project(index, &args.format, project);
 
     info!("{display}");
 
@@ -42,20 +43,23 @@ where
   Ok(())
 }
 
-pub async fn write_to_file(args: &Args, data: &Data) -> GlobalResult<()> {
-  let path = if args.output_custom {
-    args.output.clone()
-  } else {
-    args.path.join(&args.output)
-  };
+pub async fn write(args: &Args, data: &Data) -> GlobalResult<()> {
+  match &args.output {
+    Some(path) => {
+      let path = if args.output_custom { path.clone() } else { args.path.join(&path) };
 
-  if path.exists() && !args.force {
-    return Err(GlobalError::Validation(ValidationError::OutputAlreadyExits(path)));
+      if path.exists() && !args.force {
+        return Err(GlobalError::Validation(ValidationError::OutputAlreadyExits(path)));
+      }
+
+      let mut file = File::create(path).await?;
+
+      write_projects(args, data, &mut file).await?;
+    }
+    None => {
+      write_projects(args, data, &mut stdout()).await?;
+    }
   }
-
-  let mut file = File::create(path).await?;
-
-  write_projects(args, data, &mut file).await?;
 
   Ok(())
 }

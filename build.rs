@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 extern crate clap;
 extern crate log;
 
@@ -15,7 +17,9 @@ where
 {
   let mut command = Args::command();
 
-  generate_to(shell, &mut command, "packwizml", dir)?;
+  // uncomment to generate completions,
+  // commented because it slows down builds for testing
+  // generate_to(shell, &mut command, "packwizml", dir)?;
 
   Ok(())
 }

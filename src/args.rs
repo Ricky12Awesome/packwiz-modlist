@@ -21,8 +21,8 @@ pub struct Args {
   #[clap(short = 'M')]
   pub mods_custom: bool,
   /// Specify a output file
-  #[clap(long, short = 'o', default_value = "modlist.md")]
-  pub output: PathBuf,
+  #[clap(long, short = 'o')]
+  pub output: Option<PathBuf>,
   /// Disable'`--output' being relative to '--path'
   #[clap(short = 'O')]
   pub output_custom: bool,
@@ -41,7 +41,7 @@ pub struct Args {
   #[clap(long, global = true)]
   pub json: bool,
   /// Specify a custom format
-  #[clap(long, short = 'f', default_value = "[{NAME}]({URL}) - {DESCRIPTION}\n")]
+  #[clap(long, short = 'f', allow_hyphen_values = true, default_value = "- [{NAME}]({URL}) - {DESCRIPTION}\n")]
   pub format: String,
 }
 
