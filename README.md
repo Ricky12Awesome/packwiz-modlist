@@ -24,16 +24,16 @@ packwizml --help # short: -h
 # Prints about this program
 packwizml --about
 
-# Specify a project path
+# Sets a project path
 # other path options are relative to this by default
 # to disable this, add '-O' for output and '-M' for mods
 packwizml --path ./ # short: -p
 
-# Specify a mods directory
+# Sets an output directory
 # to disable being relative to '--path' add '-O'
 packwizml --output modlist.md # short: -o
 
-# Specify a mods directory
+# Sets a mods directory
 # to disable being relative to '--path' add '-M'
 packwizml --mods ./mods # short: -m
 
@@ -43,23 +43,26 @@ packwizml --force # short: -F
 # Prints out all data as json so it can be used in scripts
 packwizml --json
 
-# Specify the lagging level
+# Sets the lagging level
 # possible values: Off, Error, Warn, Info, Debug, Trace
 # default: Warn
 packwizml --log-level=Off # short: -v
 
-# Specify the color mode
+# Sets the color mode
 # possible values: Auto, Always, Never
 # default: Auto
 packwizml --color-mode=Auto # short: -c
 
-# Specify a custom format
+# Sets a custom format
 # default: `- [{NAME}]({URL}) - {DESCRIPTION}\n`
 packwizml --format "- [{NAME}]({URL}) - {DESCRIPTION}\n" # short: -f
 
-# Specify how it should sort
+# Sets how it should sort
 # possible values: Name, Title, Slug, Id, None
-packwizml --sort Name # short: -s
+packwizml --sort-by Name # short: -s
+
+# Sets if sorting should be reverse
+packwizml --reverse # short: -r
 ```
 
 #### Placeholders
