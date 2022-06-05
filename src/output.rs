@@ -2,6 +2,7 @@ use log::info;
 use tokio::fs::File;
 use tokio::io::{stdout, AsyncWrite, AsyncWriteExt};
 
+use crate::args::SortingMode;
 use crate::data::{get_data, get_projects};
 use crate::object::{Data, Project};
 use crate::{Args, GlobalError, GlobalResult, ValidationError};
@@ -30,7 +31,22 @@ pub async fn write_projects<W>(args: &Args, data: &Data, writer: &mut W) -> Glob
 where
   W: AsyncWrite + Unpin,
 {
-  for (index, project) in data.projects.iter().enumerate() {
+  let mut projects = data.projects.clone();
+
+  if !matches!(args.sort_by, SortingMode::None) {
+    projects.sort_by(|a, b| match args.sort_by {
+      SortingMode::Name | SortingMode::Title => a.title().cmp(&b.title()),
+      SortingMode::Slug => a.slug().cmp(&b.slug()),
+      SortingMode::Id => a.id().cmp(&b.id()),
+      SortingMode::None => unreachable!(),
+    });
+  }
+
+  if args.reverse {
+    projects.reverse();
+  }
+
+  for (index, project) in projects.iter().enumerate() {
     let display = display_project(index, &args.format, project);
 
     info!("{display}");

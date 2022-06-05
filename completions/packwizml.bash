@@ -19,7 +19,7 @@ _packwizml() {
 
     case "${cmd}" in
         packwizml)
-            opts="-h -V -p -m -M -o -O -F -v -c -f --help --version --path --mods --output --force --log-level --color-mode --about --json --format"
+            opts="-h -V -p -m -M -o -O -F -v -c -s -r -f --help --version --path --mods --output --force --log-level --color-mode --sort-by --reverse --about --json --format"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -63,6 +63,14 @@ _packwizml() {
                     ;;
                 -c)
                     COMPREPLY=($(compgen -W "Auto Always Never" -- "${cur}"))
+                    return 0
+                    ;;
+                --sort-by)
+                    COMPREPLY=($(compgen -W "Name Title Slug Id None" -- "${cur}"))
+                    return 0
+                    ;;
+                -s)
+                    COMPREPLY=($(compgen -W "Name Title Slug Id None" -- "${cur}"))
                     return 0
                     ;;
                 --format)

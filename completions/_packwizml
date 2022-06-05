@@ -19,14 +19,16 @@ _packwizml() {
 '--path=[Path to the packwiz directory containing '\''pack.toml'\'']:PATH:_files -/' \
 '-m+[Path to the directory contains all the mod metadata files]:MODS:_files -/' \
 '--mods=[Path to the directory contains all the mod metadata files]:MODS:_files -/' \
-'-o+[Specify a output file]:OUTPUT: ' \
-'--output=[Specify a output file]:OUTPUT: ' \
+'-o+[Set an output file]:OUTPUT: ' \
+'--output=[Set an output file]:OUTPUT: ' \
 '-v+[Sets the verbosity of logging]:LOG_LEVEL:(Off Error Warn Info Debug Trace)' \
 '--log-level=[Sets the verbosity of logging]:LOG_LEVEL:(Off Error Warn Info Debug Trace)' \
-'-c+[]:COLOR_MODE:(Auto Always Never)' \
-'--color-mode=[]:COLOR_MODE:(Auto Always Never)' \
-'-f+[Specify a custom format]:FORMAT: ' \
-'--format=[Specify a custom format]:FORMAT: ' \
+'-c+[Sets the color mode]:COLOR_MODE:(Auto Always Never)' \
+'--color-mode=[Sets the color mode]:COLOR_MODE:(Auto Always Never)' \
+'-s+[Sets the sorting mode]:SORT_BY:(Name Title Slug Id None)' \
+'--sort-by=[Sets the sorting mode]:SORT_BY:(Name Title Slug Id None)' \
+'-f+[Set a custom format]:FORMAT: ' \
+'--format=[Set a custom format]:FORMAT: ' \
 '-h[Print help information]' \
 '--help[Print help information]' \
 '-V[Print version information]' \
@@ -35,6 +37,8 @@ _packwizml() {
 '-O[Disable'\''`--output'\'' being relative to '\''--path'\'']' \
 '-F[Overwrites output if it already exists]' \
 '--force[Overwrites output if it already exists]' \
+'-r[Sets if sorting should be reverse]' \
+'--reverse[Sets if sorting should be reverse]' \
 '--about[Prints about this program]' \
 '--json[Prints json output]' \
 && ret=0

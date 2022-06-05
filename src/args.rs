@@ -7,6 +7,7 @@ use log::LevelFilter;
 
 const LOG_VALUES: [&str; 6] = ["Off", "Error", "Warn", "Info", "Debug", "Trace"];
 const COLOR_MODES: [&str; 3] = ["Auto", "Always", "Never"];
+const SORTING_MODES: [&str; 5] = ["Name", "Title", "Slug", "Id", "None"];
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
@@ -20,7 +21,7 @@ pub struct Args {
   /// Disable '--mods' being relative to '--path'
   #[clap(short = 'M')]
   pub mods_custom: bool,
-  /// Specify a output file
+  /// Set an output file
   #[clap(long, short = 'o')]
   pub output: Option<PathBuf>,
   /// Disable'`--output' being relative to '--path'
@@ -32,15 +33,22 @@ pub struct Args {
   /// Sets the verbosity of logging
   #[clap(long, short = 'v', ignore_case = true, default_value = "Warn", possible_values = LOG_VALUES)]
   pub log_level: LevelFilter,
+  /// Sets the color mode
   #[clap(long, short = 'c', ignore_case = true, default_value = "Auto", possible_values = COLOR_MODES)]
   pub color_mode: ColorMode,
+  /// Sets the sorting mode
+  #[clap(long, short = 's', ignore_case = true, default_value = "None", possible_values = SORTING_MODES)]
+  pub sort_by: SortingMode,
+  /// Sets if sorting should be reverse
+  #[clap(long, short = 'r')]
+  pub reverse: bool,
   /// Prints about this program
   #[clap(long, global = true)]
   pub about: bool,
   /// Prints json output
   #[clap(long, global = true)]
   pub json: bool,
-  /// Specify a custom format
+  /// Set a custom format
   #[clap(long, short = 'f', allow_hyphen_values = true, default_value = "- [{NAME}]({URL}) - {DESCRIPTION}\n")]
   pub format: String,
 }
@@ -57,9 +65,33 @@ impl FromStr for ColorMode {
 
   fn from_str(s: &str) -> Result<Self, Self::Err> {
     match s.to_lowercase().as_str() {
-      "auto" => Ok(ColorMode::Auto),
-      "always" => Ok(ColorMode::Always),
-      "never" => Ok(ColorMode::Never),
+      "auto" => Ok(Self::Auto),
+      "always" => Ok(Self::Always),
+      "never" => Ok(Self::Never),
+      _ => unreachable!(),
+    }
+  }
+}
+
+#[derive(Debug, Copy, Clone)]
+pub enum SortingMode {
+  Name,
+  Title,
+  Slug,
+  Id,
+  None,
+}
+
+impl FromStr for SortingMode {
+  type Err = Infallible;
+
+  fn from_str(s: &str) -> Result<Self, Self::Err> {
+    match s.to_lowercase().as_str() {
+      "name" => Ok(Self::Name),
+      "title" => Ok(Self::Title),
+      "slug" => Ok(Self::Slug),
+      "id" => Ok(Self::Id),
+      "none" => Ok(Self::None),
       _ => unreachable!(),
     }
   }
