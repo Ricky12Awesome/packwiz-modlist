@@ -35,8 +35,6 @@ where
 
     info!("{display}");
 
-    let display = format!("{display}\n");
-
     writer.write_all(&display.into_bytes()).await?;
   }
 
