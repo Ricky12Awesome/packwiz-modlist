@@ -1,3 +1,4 @@
+use std::convert::Infallible;
 use std::path::PathBuf;
 use std::str::FromStr;
 
@@ -52,14 +53,14 @@ pub enum ColorMode {
 }
 
 impl FromStr for ColorMode {
-  type Err = String;
+  type Err = Infallible;
 
   fn from_str(s: &str) -> Result<Self, Self::Err> {
     match s.to_lowercase().as_str() {
       "auto" => Ok(ColorMode::Auto),
       "always" => Ok(ColorMode::Always),
       "never" => Ok(ColorMode::Never),
-      _ => Err(format!("'{s}' is not a valid color mode"))
+      _ => unreachable!(),
     }
   }
 }
