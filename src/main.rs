@@ -1,5 +1,6 @@
 use std::fmt::Display;
 
+use cache::Cache;
 use clap::Parser;
 use colored::Colorize;
 use simple_logger::SimpleLogger;
@@ -9,9 +10,9 @@ use crate::error::{handle_error, GlobalError, GlobalResult, ValidationError};
 use crate::output::{generate, write};
 
 mod args;
+mod cache;
 mod data;
 mod error;
-mod misc;
 mod object;
 mod output;
 
@@ -28,7 +29,10 @@ async fn main() {
   #[cfg(windows)]
   colored::control::set_virtual_terminal(true).unwrap();
 
-  SimpleLogger::new().with_level(args.log_level).init().unwrap();
+  SimpleLogger::new()
+    .with_level(args.log_level)
+    .init()
+    .unwrap();
 
   if args.about {
     fn about(k: &str, v: impl Display) {
@@ -53,7 +57,10 @@ async fn main() {
 }
 
 async fn run(args: &Args) -> GlobalResult<()> {
-  let data = generate(args).await?;
+  let mut cache = Cache::new(args).await?;
+  let data = generate(&mut cache, args).await?;
+
+  println!("{cache:?}");
 
   if args.json {
     println!("{}", serde_json::to_string_pretty(&data).unwrap());
@@ -61,5 +68,8 @@ async fn run(args: &Args) -> GlobalResult<()> {
     return Ok(());
   }
 
-  write(args, &data).await
+  write(args, &data).await?;
+  cache.save(args).await?;
+
+  Ok(())
 }

@@ -3,6 +3,7 @@ use tokio::fs::File;
 use tokio::io::{stdout, AsyncWrite, AsyncWriteExt};
 
 use crate::args::SortingMode;
+use crate::cache::Cache;
 use crate::data::{get_data, get_projects};
 use crate::object::{Data, Project};
 use crate::{Args, GlobalError, GlobalResult, ValidationError};
@@ -20,11 +21,15 @@ pub fn display_project(index: usize, format: &str, project: &Project) -> String 
     .replace("\\n", "\n")
 }
 
-pub async fn generate(args: &Args) -> GlobalResult<Data> {
+pub async fn generate(cache: &mut Cache, args: &Args) -> GlobalResult<Data> {
   let (pack, mods) = get_data(args)?;
-  let projects = get_projects(&mods).await?;
+  let projects = get_projects(cache, &mods).await?;
 
-  Ok(Data { pack, mods, projects })
+  Ok(Data {
+    pack,
+    mods,
+    projects,
+  })
 }
 
 pub async fn write_projects<W>(args: &Args, data: &Data, writer: &mut W) -> GlobalResult<()>
@@ -60,10 +65,16 @@ where
 pub async fn write(args: &Args, data: &Data) -> GlobalResult<()> {
   match &args.output {
     Some(path) => {
-      let path = if args.output_custom { path.clone() } else { args.path.join(&path) };
+      let path = if args.output_custom {
+        path.clone()
+      } else {
+        args.path.join(&path)
+      };
 
       if path.exists() && !args.force {
-        return Err(GlobalError::Validation(ValidationError::OutputAlreadyExits(path)));
+        return Err(GlobalError::Validation(
+          ValidationError::OutputAlreadyExits(path),
+        ));
       }
 
       let mut file = File::create(path).await?;

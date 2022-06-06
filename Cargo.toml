@@ -28,6 +28,7 @@ futures = "^0.3"
 thiserror = "^1.0"
 colored = "^2.0"
 log = "^0.4"
+itertools = "^0.10"
 simple_logger = { version = "^2.1", default-features = false, features = ["colored"] }
 
 [build-dependencies]

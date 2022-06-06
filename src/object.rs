@@ -24,7 +24,31 @@ pub struct PackMod {
   pub name: String,
   pub filename: String,
   pub side: String,
+  pub download: PackModDownload,
   pub update: PackModUpdate,
+}
+
+impl PackMod {
+  pub fn id(&self) -> String {
+    if let Some(pack_mod) = &self.update.modrinth {
+      pack_mod.mod_id.clone()
+    } else if let Some(pack_mod) = &self.update.curseforge {
+      pack_mod.project_id.to_string()
+    } else {
+      unreachable!()
+    }
+  }
+
+  pub fn hash(&self) -> &String {
+    &self.download.hash
+  }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PackModDownload {
+  pub hash: String,
+  #[serde(alias = "hash-format")]
+  pub hash_format: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -90,7 +114,9 @@ impl From<ModrinthProject> for Project {
 impl Project {
   pub fn url(&self) -> String {
     match self {
-      Project::CurseForge(CurseForgeProject { slug, .. }) => format!("https://www.curseforge.com/minecraft/mc-mods/{slug}"),
+      Project::CurseForge(CurseForgeProject { slug, .. }) => {
+        format!("https://www.curseforge.com/minecraft/mc-mods/{slug}")
+      }
       Project::Modrinth(ModrinthProject { id, .. }) => format!("https://modrinth.com/mod/{id}"),
     }
   }

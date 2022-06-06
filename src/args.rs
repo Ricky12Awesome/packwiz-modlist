@@ -15,6 +15,9 @@ pub struct Args {
   /// Path to the packwiz directory containing 'pack.toml'
   #[clap(long, short = 'p', default_value = "./", value_hint = clap::ValueHint::DirPath)]
   pub path: PathBuf,
+  /// Set the cache file
+  #[clap(long, default_value = "./.packwizml.cache")]
+  pub cache: PathBuf,
   /// Path to the directory contains all the mod metadata files
   #[clap(long, short = 'm', default_value = "mods", value_hint = clap::ValueHint::DirPath)]
   pub mods: PathBuf,
@@ -49,7 +52,12 @@ pub struct Args {
   #[clap(long, global = true)]
   pub json: bool,
   /// Set a custom format
-  #[clap(long, short = 'f', allow_hyphen_values = true, default_value = "- [{NAME}]({URL}) - {DESCRIPTION}\n")]
+  #[clap(
+    long,
+    short = 'f',
+    allow_hyphen_values = true,
+    default_value = "- [{NAME}]({URL}) - {DESCRIPTION}\n"
+  )]
   pub format: String,
 }
 

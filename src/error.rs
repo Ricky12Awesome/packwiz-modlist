@@ -14,6 +14,8 @@ pub enum ValidationError {
   DirNotExist(PathBuf),
   #[error("{0} must be a directory")]
   MustBeDir(PathBuf),
+  #[error("{0} must be a file")]
+  MustBeFile(PathBuf),
   #[error("pack.toml was not found in {0}")]
   PackNotFound(PathBuf),
 }
