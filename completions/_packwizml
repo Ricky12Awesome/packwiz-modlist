@@ -26,8 +26,8 @@ _packwizml() {
 '--log-level=[Sets the verbosity of logging]:LOG_LEVEL:(Off Error Warn Info Debug Trace)' \
 '-c+[Sets the color mode]:COLOR_MODE:(Auto Always Never)' \
 '--color-mode=[Sets the color mode]:COLOR_MODE:(Auto Always Never)' \
-'-s+[Sets the sorting mode]:SORT_BY:(Name Title Slug Id None)' \
-'--sort-by=[Sets the sorting mode]:SORT_BY:(Name Title Slug Id None)' \
+'-s+[Sets the sorting mode]:SORT_BY:(Name Title Slug Id)' \
+'--sort-by=[Sets the sorting mode]:SORT_BY:(Name Title Slug Id)' \
 '-f+[Set a custom format]:FORMAT: ' \
 '--format=[Set a custom format]:FORMAT: ' \
 '-h[Print help information]' \

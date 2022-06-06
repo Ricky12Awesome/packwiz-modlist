@@ -70,11 +70,11 @@ _packwizml() {
                     return 0
                     ;;
                 --sort-by)
-                    COMPREPLY=($(compgen -W "Name Title Slug Id None" -- "${cur}"))
+                    COMPREPLY=($(compgen -W "Name Title Slug Id" -- "${cur}"))
                     return 0
                     ;;
                 -s)
-                    COMPREPLY=($(compgen -W "Name Title Slug Id None" -- "${cur}"))
+                    COMPREPLY=($(compgen -W "Name Title Slug Id" -- "${cur}"))
                     return 0
                     ;;
                 --format)

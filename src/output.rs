@@ -38,12 +38,13 @@ where
 {
   let mut projects = data.projects.clone();
 
-  if !matches!(args.sort_by, SortingMode::None) {
-    projects.sort_by(|a, b| match args.sort_by {
-      SortingMode::Name | SortingMode::Title => a.title().cmp(&b.title()),
+  if let Some(mode) = args.sort_by {
+    projects.sort_by(|a, b| match mode {
+      SortingMode::Name | SortingMode::Title => {
+        a.title().to_lowercase().cmp(&b.title().to_lowercase())
+      }
       SortingMode::Slug => a.slug().cmp(&b.slug()),
       SortingMode::Id => a.id().cmp(&b.id()),
-      SortingMode::None => unreachable!(),
     });
   }
 

@@ -4,7 +4,7 @@ complete -c packwizml -s m -l mods -d 'Path to the directory contains all the mo
 complete -c packwizml -s o -l output -d 'Set an output file' -r
 complete -c packwizml -s v -l log-level -d 'Sets the verbosity of logging' -r -f -a "{Off	,Error	,Warn	,Info	,Debug	,Trace	}"
 complete -c packwizml -s c -l color-mode -d 'Sets the color mode' -r -f -a "{Auto	,Always	,Never	}"
-complete -c packwizml -s s -l sort-by -d 'Sets the sorting mode' -r -f -a "{Name	,Title	,Slug	,Id	,None	}"
+complete -c packwizml -s s -l sort-by -d 'Sets the sorting mode' -r -f -a "{Name	,Title	,Slug	,Id	}"
 complete -c packwizml -s f -l format -d 'Set a custom format' -r
 complete -c packwizml -s h -l help -d 'Print help information'
 complete -c packwizml -s V -l version -d 'Print version information'

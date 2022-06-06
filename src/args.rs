@@ -7,7 +7,7 @@ use log::LevelFilter;
 
 const LOG_VALUES: [&str; 6] = ["Off", "Error", "Warn", "Info", "Debug", "Trace"];
 const COLOR_MODES: [&str; 3] = ["Auto", "Always", "Never"];
-const SORTING_MODES: [&str; 5] = ["Name", "Title", "Slug", "Id", "None"];
+const SORTING_MODES: [&str; 4] = ["Name", "Title", "Slug", "Id"];
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
@@ -40,8 +40,8 @@ pub struct Args {
   #[clap(long, short = 'c', ignore_case = true, default_value = "Auto", possible_values = COLOR_MODES)]
   pub color_mode: ColorMode,
   /// Sets the sorting mode
-  #[clap(long, short = 's', ignore_case = true, default_value = "None", possible_values = SORTING_MODES)]
-  pub sort_by: SortingMode,
+  #[clap(long, short = 's', ignore_case = true, possible_values = SORTING_MODES)]
+  pub sort_by: Option<SortingMode>,
   /// Sets if sorting should be reverse
   #[clap(long, short = 'r')]
   pub reverse: bool,
@@ -87,7 +87,6 @@ pub enum SortingMode {
   Title,
   Slug,
   Id,
-  None,
 }
 
 impl FromStr for SortingMode {
@@ -99,7 +98,6 @@ impl FromStr for SortingMode {
       "title" => Ok(Self::Title),
       "slug" => Ok(Self::Slug),
       "id" => Ok(Self::Id),
-      "none" => Ok(Self::None),
       _ => unreachable!(),
     }
   }
