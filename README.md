@@ -63,6 +63,10 @@ packwizml --sort-by Name # short: -s
 
 # Sets if sorting should be reverse
 packwizml --reverse # short: -r
+
+# Sets the cache file
+# default: .packwizml.cache
+packwizml --cache .packwizml.cache
 ```
 
 #### Placeholders
@@ -90,5 +94,5 @@ packwizml --reverse # short: -r
 * [ ] Automated Tests
 * [ ] Packaging outside of cargo
 * [ ] Packaging with Completions
-* [ ] Caching (to avoid fetching project by url, if same version)
+* [x] Caching (to avoid fetching project by url, if same version)
 * [ ] Templates (kinda like preset-format)

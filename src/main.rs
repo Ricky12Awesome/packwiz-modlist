@@ -60,8 +60,6 @@ async fn run(args: &Args) -> GlobalResult<()> {
   let mut cache = Cache::new(args).await?;
   let data = generate(&mut cache, args).await?;
 
-  println!("{cache:?}");
-
   if args.json {
     println!("{}", serde_json::to_string_pretty(&data).unwrap());
 

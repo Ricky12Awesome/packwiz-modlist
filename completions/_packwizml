@@ -17,6 +17,7 @@ _packwizml() {
     _arguments "${_arguments_options[@]}" \
 '-p+[Path to the packwiz directory containing '\''pack.toml'\'']:PATH:_files -/' \
 '--path=[Path to the packwiz directory containing '\''pack.toml'\'']:PATH:_files -/' \
+'--cache=[Set the cache file]:CACHE: ' \
 '-m+[Path to the directory contains all the mod metadata files]:MODS:_files -/' \
 '--mods=[Path to the directory contains all the mod metadata files]:MODS:_files -/' \
 '-o+[Set an output file]:OUTPUT: ' \

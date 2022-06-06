@@ -23,6 +23,7 @@ Register-ArgumentCompleter -Native -CommandName 'packwizml' -ScriptBlock {
         'packwizml' {
             [CompletionResult]::new('-p', 'p', [CompletionResultType]::ParameterName, 'Path to the packwiz directory containing ''pack.toml''')
             [CompletionResult]::new('--path', 'path', [CompletionResultType]::ParameterName, 'Path to the packwiz directory containing ''pack.toml''')
+            [CompletionResult]::new('--cache', 'cache', [CompletionResultType]::ParameterName, 'Set the cache file')
             [CompletionResult]::new('-m', 'm', [CompletionResultType]::ParameterName, 'Path to the directory contains all the mod metadata files')
             [CompletionResult]::new('--mods', 'mods', [CompletionResultType]::ParameterName, 'Path to the directory contains all the mod metadata files')
             [CompletionResult]::new('-o', 'o', [CompletionResultType]::ParameterName, 'Set an output file')

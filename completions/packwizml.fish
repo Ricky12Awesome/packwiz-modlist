@@ -1,4 +1,5 @@
 complete -c packwizml -s p -l path -d 'Path to the packwiz directory containing \'pack.toml\'' -r -f -a "(__fish_complete_directories)"
+complete -c packwizml -l cache -d 'Set the cache file' -r
 complete -c packwizml -s m -l mods -d 'Path to the directory contains all the mod metadata files' -r -f -a "(__fish_complete_directories)"
 complete -c packwizml -s o -l output -d 'Set an output file' -r
 complete -c packwizml -s v -l log-level -d 'Sets the verbosity of logging' -r -f -a "{Off	,Error	,Warn	,Info	,Debug	,Trace	}"

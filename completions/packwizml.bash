@@ -19,7 +19,7 @@ _packwizml() {
 
     case "${cmd}" in
         packwizml)
-            opts="-h -V -p -m -M -o -O -F -v -c -s -r -f --help --version --path --mods --output --force --log-level --color-mode --sort-by --reverse --about --json --format"
+            opts="-h -V -p -m -M -o -O -F -v -c -s -r -f --help --version --path --cache --mods --output --force --log-level --color-mode --sort-by --reverse --about --json --format"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -30,6 +30,10 @@ _packwizml() {
                     return 0
                     ;;
                 -p)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
+                --cache)
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
