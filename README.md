@@ -91,6 +91,7 @@ packwizml --cache .packwizml.cache
 
 ## Todo
 * [x] Sorting
+* [ ] Use CurseForge official API
 * [ ] Automated Tests
 * [ ] Packaging outside of cargo
 * [ ] Packaging with Completions
