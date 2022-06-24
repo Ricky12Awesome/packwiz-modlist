@@ -18,7 +18,7 @@ use crate::object::{
 };
 use crate::Args;
 
-const CURSEFORGE_API_KEY: &str = include_str!("../.cf_token");
+const CURSEFORGE_API_KEY: &str = env!("CF_API_KEY");
 const CURSEFORGE_API: &str = "https://api.curseforge.com/v1";
 const MODRINTH_API: &str = "https://api.modrinth.com/v2";
 
