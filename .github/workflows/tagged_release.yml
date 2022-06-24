@@ -9,6 +9,7 @@ on:
 
 env:
   BINARY_NAME: packwizml
+  CF_API_KEY:  ${{ secrets.CF_API_KEY }}
 
 jobs:
   artifact:
