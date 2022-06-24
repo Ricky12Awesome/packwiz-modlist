@@ -599,7 +599,7 @@ checksum = "21326818e99cfe6ce1e524c2a805c189a99b5ae555a35d19f9a284b427d86afa"
 
 [[package]]
 name = "packwiz-modlist"
-version = "1.4.0"
+version = "1.5.0"
 dependencies = [
  "anyhow",
  "clap",
