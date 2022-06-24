@@ -99,4 +99,5 @@ packwizml --cache .packwizml.cache
 * [ ] Templates (kinda like preset-format)
 
 ### About Curseforge API
-Create a file named `.cf_token` in the root of the project, and paste your token there
+Create a file named `.cf_token` in the root of the project, and paste your token there,
+or set `CF_API_KEY` environment variable
