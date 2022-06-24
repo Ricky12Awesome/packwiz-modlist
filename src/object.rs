@@ -156,3 +156,14 @@ pub struct Data {
   pub mods: PackMods,
   pub projects: Projects,
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CurseforgeModIds {
+  pub mod_ids: Vec<u32>
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CurseforgeMods {
+  pub data: Vec<CurseForgeProject>
+}

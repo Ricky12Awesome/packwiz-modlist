@@ -91,9 +91,12 @@ packwizml --cache .packwizml.cache
 
 ## Todo
 * [x] Sorting
-* [ ] Use CurseForge official API
+* [x] Use CurseForge official API
 * [ ] Automated Tests
 * [ ] Packaging outside of cargo
 * [ ] Packaging with Completions
 * [x] Caching (to avoid fetching project by url, if same version)
 * [ ] Templates (kinda like preset-format)
+
+### About Curseforge API
+Create a file named `.cf_token` in the root of the project, and paste your token there
