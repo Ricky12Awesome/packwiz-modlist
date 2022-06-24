@@ -33,11 +33,5 @@ fn main() -> anyhow::Result<()> {
   // generate_completions(Shell::Zsh, "completions")?;
   // generate_completions(Shell::Fish, "completions")?;
 
-  if let Ok(mut file) = File::open(".cf_token") {
-    let mut str = String::new();
-    file.read_to_string(&mut str);
-    println!("cargo:rustc-env=CF_API_KEY={str}");
-  }
-
   Ok(())
 }
