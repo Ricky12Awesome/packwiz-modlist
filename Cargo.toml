@@ -2,7 +2,7 @@
 name = "packwiz-modlist"
 description = "Creates a modlist from packwiz"
 authors = ["Ricky12Awesome"]
-version = "1.5.1"
+version = "1.5.2"
 edition = "2021"
 license = "Apache-2.0"
 readme = "README.md"
@@ -29,7 +29,7 @@ thiserror = "^1.0"
 colored = "^2.0"
 log = "^0.4"
 itertools = "^0.10"
-simple_logger = { version = "^2.1", default-features = false, features = ["colored"] }
+simple_logger = { version = "^2.2", default-features = false, features = ["colored"] }
 
 [build-dependencies]
 log = "^0.4"
@@ -37,4 +37,4 @@ clap = { version = "^3.2", features = ["cargo", "derive"] }
 clap_complete = "^3.2"
 anyhow = "^1.0"
 # So LevelFilter works
-simple_logger = { version = "^2.1", default-features = false }
+simple_logger = { version = "^2.2", default-features = false }
