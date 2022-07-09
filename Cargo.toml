@@ -2,7 +2,7 @@
 name = "packwiz-modlist"
 description = "Creates a modlist from packwiz"
 authors = ["Ricky12Awesome"]
-version = "1.5.2"
+version = "1.5.3"
 edition = "2021"
 license = "Apache-2.0"
 readme = "README.md"
@@ -10,6 +10,7 @@ keywords = ["packwiz", "modding", "minecraft"]
 categories = ["command-line-utilities"]
 repository = "https://github.com/Ricky12Awesome/packwiz-modlist"
 homepage = "https://github.com/Ricky12Awesome/packwiz-modlist"
+build = "build.rs"
 
 [[bin]]
 name = "packwizml"
@@ -38,3 +39,4 @@ clap_complete = "^3.2"
 anyhow = "^1.0"
 # So LevelFilter works
 simple_logger = { version = "^2.2", default-features = false }
+dotenv-build = "^0.1"

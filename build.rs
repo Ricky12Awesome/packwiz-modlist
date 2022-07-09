@@ -33,5 +33,7 @@ fn main() -> anyhow::Result<()> {
   // generate_completions(Shell::Zsh, "completions")?;
   // generate_completions(Shell::Fish, "completions")?;
 
+  dotenv_build::output(dotenv_build::Config::default())?;
+
   Ok(())
 }
