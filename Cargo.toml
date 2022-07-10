@@ -23,4 +23,10 @@ path = "src/main.rs"
 
 [dependencies]
 
+#minreq = { version = "^2.6", features = ["https-rustls", "json-using-serde"] }
+#serde = { version = "^1.0", features = ["derive"] }
+
+reqwest = { version = "0.11.11" }
+
+
 [build-dependencies]
