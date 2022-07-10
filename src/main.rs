@@ -2,10 +2,12 @@
 
 use crate::request::curseforge::get_curseforge_mods;
 use crate::request::modrinth::get_modrinth_projects;
+use crate::request::Project;
 use log::Log;
 
 mod consts;
-pub mod error;
+mod error;
+mod macros;
 mod request;
 
 fn setup_logging() {
@@ -24,8 +26,16 @@ fn setup_logging() {
 fn main() {
   setup_logging();
 
-  // let projects = get_modrinth_projects(&["AANobbMI"]);
-  let projects = get_curseforge_mods(&[238222]);
+  // Sodium
+  let mr_projects = get_modrinth_projects(&["AANobbMI"]).unwrap();
 
-  println!("{projects:#?}");
+  // JEI
+  let cf_projects = get_curseforge_mods(&[238222]).unwrap();
+
+  let mr_project: Project = mr_projects[0].clone().into();
+  let cf_project: Project = cf_projects[0].clone().into();
+
+  let mods = vec![mr_project, cf_project];
+
+  println!("{mods:#?}");
 }

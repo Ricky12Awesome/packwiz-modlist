@@ -1,34 +1,92 @@
 use crate::consts::USER_AGENT;
 use minreq::{Request, URL};
+use serde::{Deserialize, Serialize};
 
 pub mod curseforge;
 pub mod modrinth;
-
-#[macro_export]
-macro_rules! request_returns {
-  ($r:expr) => {
-    match $r.status_code {
-      200 => $r.json().map_err($crate::error!()),
-      _ => Err($crate::error!($r)),
-    }
-  };
-
-  ($r:expr, $T:tt) => {
-    match $r.status_code {
-      200 => $r.json::<$T>().map_err($crate::error!()),
-      _ => Err($crate::error!($r)),
-    }
-  };
-}
 
 pub fn get<T: Into<URL>>(url: T) -> Request {
   minreq::get(url)
     .with_header("User-Agent", USER_AGENT)
     .with_header("Content-Type", "application/json")
+    .with_header("Accept", "application/json")
 }
 
 pub fn post<T: Into<URL>>(url: T) -> Request {
   minreq::post(url)
     .with_header("User-Agent", USER_AGENT)
     .with_header("Content-Type", "application/json")
+    .with_header("Accept", "application/json")
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct Project {
+  pub id: String,
+  pub slug: String,
+  pub title: String,
+  pub description: String,
+  /// [Option] because Curseforge doesn't offer a simple way to get a
+  /// license for a project even though it's right on the project page
+  pub license: Option<License>,
+  /// Will be empty since modrinth handles authors in a different way
+  /// by using teams, and currently there is no way to bulk get teams
+  /// https://github.com/modrinth/labrinth/issues/331
+  pub authors: Vec<Author>,
+  pub icon_url: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct Author {
+  pub name: String,
+  pub url: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct License {
+  pub id: String,
+  pub name: String,
+  pub url: String,
+}
+
+impl From<modrinth::Project> for Project {
+  fn from(project: modrinth::Project) -> Self {
+    Self {
+      id: project.id,
+      slug: project.slug,
+      title: project.title,
+      description: project.description,
+      license: License {
+        id: project.license.id,
+        name: project.license.name,
+        url: project.license.url,
+      }
+      .into(),
+      authors: Vec::new(),
+      icon_url: project.icon_url,
+    }
+  }
+}
+
+impl From<curseforge::Mod> for Project {
+  fn from(project: curseforge::Mod) -> Self {
+    Self {
+      id: project.id.to_string(),
+      slug: project.slug,
+      title: project.name,
+      description: project.summary,
+      license: None,
+      authors: project
+        .authors
+        .into_iter()
+        .map(|author| Author {
+          name: author.name,
+          url: author.url,
+        })
+        .collect(),
+      icon_url: project.logo.thumbnail_url.into(),
+    }
+  }
 }

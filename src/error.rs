@@ -2,30 +2,6 @@ use colored::{ColoredString, Colorize};
 use std::fmt::{Display, Formatter, Write};
 use thiserror::Error;
 
-#[macro_export]
-macro_rules! location {
-  () => {
-    $crate::error::Location {
-      file: file!(),
-      line: line!(),
-      col: column!(),
-    }
-  };
-}
-
-#[macro_export]
-macro_rules! error {
-  () => {
-    |err| $crate::error!(err)
-  };
-  ($msg:expr) => {
-    $crate::error::Error {
-      at: $crate::location!(),
-      msg: $msg.into(),
-    }
-  };
-}
-
 #[derive(Error, Debug, Clone)]
 pub struct Error {
   pub at: Location,

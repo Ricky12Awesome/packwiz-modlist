@@ -214,6 +214,7 @@ dependencies = [
  "minreq",
  "serde",
  "serde_json",
+ "serde_with",
  "simple_logger",
  "thiserror",
  "toml",
@@ -332,6 +333,15 @@ checksum = "82c2c1fdcd807d1098552c5b9a36e425e42e9fbd7c6a37a8425f390f781f7fa7"
 dependencies = [
  "itoa",
  "ryu",
+ "serde",
+]
+
+[[package]]
+name = "serde_with"
+version = "1.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "678b5a069e50bf00ecd22d0cd8ddf7c236f68581b03db652061ed5eb13a312ff"
+dependencies = [
  "serde",
 ]
 
