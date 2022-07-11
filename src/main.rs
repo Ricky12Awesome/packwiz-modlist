@@ -1,10 +1,15 @@
 #![allow(unused)] // ignore warning
 
+use std::collections::HashMap;
+use std::ops::Index;
+use itertools::Itertools;
 use crate::request::curseforge::get_curseforge_mods;
 use crate::request::modrinth::get_modrinth_projects;
-use crate::request::Project;
+use crate::request::Mod;
 use log::Log;
+use crate::cache::Cache;
 
+mod cache;
 mod consts;
 mod error;
 mod macros;
@@ -26,16 +31,26 @@ fn setup_logging() {
 fn main() {
   setup_logging();
 
+  let mut cache = Cache::load(".packwizml.cache.json").unwrap();
+
   // Sodium
   let mr_projects = get_modrinth_projects(&["AANobbMI"]).unwrap();
 
   // JEI
   let cf_projects = get_curseforge_mods(&[238222]).unwrap();
 
-  let mr_project: Project = mr_projects[0].clone().into();
-  let cf_project: Project = cf_projects[0].clone().into();
+  let mr_project: Mod = mr_projects[0].clone().into();
+  let cf_project: Mod = cf_projects[0].clone().into();
 
-  let mods = vec![mr_project, cf_project];
+  cache.save();
 
-  println!("{mods:#?}");
+  let mods = vec![mr_project, cf_project]
+    .into_iter()
+    .into_group_map_by(|m| m.id.clone())
+    .into_iter()
+    .map(|l| (l.0, l.1.first().unwrap().clone()))
+    .collect::<HashMap<_, _>>();
+
+  cache.write_all(mods);
+  cache.save();
 }

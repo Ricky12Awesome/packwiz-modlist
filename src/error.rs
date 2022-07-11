@@ -110,3 +110,12 @@ impl From<(&str, serde_json::Error)> for ErrorMessage {
     }
   }
 }
+
+impl From<std::io::Error> for ErrorMessage {
+  fn from(err: std::io::Error) -> Self {
+    Self {
+      source: "IO",
+      message: err.to_string(),
+    }
+  }
+}

@@ -21,7 +21,7 @@ pub fn post<T: Into<URL>>(url: T) -> Request {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
-pub struct Project {
+pub struct Mod {
   pub id: String,
   pub slug: String,
   pub title: String,
@@ -34,6 +34,9 @@ pub struct Project {
   /// https://github.com/modrinth/labrinth/issues/331
   pub authors: Vec<Author>,
   pub icon_url: Option<String>,
+  pub source_url: Option<String>,
+  pub issues_url: Option<String>,
+  pub wiki_url: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -51,26 +54,28 @@ pub struct License {
   pub url: String,
 }
 
-impl From<modrinth::Project> for Project {
+impl From<modrinth::Project> for Mod {
   fn from(project: modrinth::Project) -> Self {
     Self {
       id: project.id,
       slug: project.slug,
       title: project.title,
       description: project.description,
-      license: License {
+      license: Some(License {
         id: project.license.id,
         name: project.license.name,
         url: project.license.url,
-      }
-      .into(),
+      }),
       authors: Vec::new(),
       icon_url: project.icon_url,
+      source_url: project.source_url,
+      issues_url: project.issue_url,
+      wiki_url: project.wiki_url,
     }
   }
 }
 
-impl From<curseforge::Mod> for Project {
+impl From<curseforge::Mod> for Mod {
   fn from(project: curseforge::Mod) -> Self {
     Self {
       id: project.id.to_string(),
@@ -87,6 +92,9 @@ impl From<curseforge::Mod> for Project {
         })
         .collect(),
       icon_url: project.logo.thumbnail_url.into(),
+      source_url: project.links.source_url,
+      issues_url: project.links.issues_url,
+      wiki_url: project.links.wiki_url,
     }
   }
 }
