@@ -18,11 +18,10 @@ macro_rules! error {
   ($msg:expr) => {
     $crate::error::Error {
       at: $crate::location!(),
-      msg: $msg.into(),
+      kind: $msg.into(),
     }
   };
 }
-
 
 #[macro_export]
 macro_rules! request_returns {

@@ -45,10 +45,10 @@ impl PackwizParser {
   where
     T: Into<PathBuf>,
   {
+    let directory = directory.into();
     let parsed_mods = directory
-      .into()
       .read_dir()
-      .map_err(crate::error!())?
+      .map_err(|err| crate::error!((directory, err)))?
       .map(|entry| entry.map_err(crate::error!()))
       .filter_ok(|entry| entry.file_name().to_string_lossy().ends_with(".pw.toml"))
       .map_ok(|entry| {
