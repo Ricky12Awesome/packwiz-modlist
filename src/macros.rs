@@ -1,3 +1,4 @@
+
 #[macro_export]
 macro_rules! location {
   () => {
@@ -21,6 +22,7 @@ macro_rules! error {
     }
   };
 }
+
 
 #[macro_export]
 macro_rules! request_returns {
