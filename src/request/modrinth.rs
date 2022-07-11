@@ -44,5 +44,8 @@ where
     .send()
     .unwrap();
 
-  crate::request_returns!(response)
+  match response.status_code {
+    200 => response.json().map_err(crate::error!()),
+    _ => Err(crate::error!(response)),
+  }
 }

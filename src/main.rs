@@ -3,6 +3,7 @@
 use crate::cache::Cache;
 use crate::error::Error;
 use crate::parser::packwiz::PackwizParser;
+use crate::parser::text::TextParser;
 use crate::request::curseforge::get_curseforge_mods;
 use crate::request::modrinth::get_modrinth_projects;
 use crate::request::Mod;
@@ -49,7 +50,10 @@ fn run() -> Result<(), Error> {
   //
   // cache.save()?;
 
-  PackwizParser::load_from(r"C:\Users\ricky\dev\modpacks\OptiCraft\mod")?;
+  let parser = PackwizParser::load_from(r"C:\Users\ricky\dev\modpacks\OptiCraft\mods")?;
+  // let parser = TextParser::new("mr:AANobbMI\ncf:238222")?;
+
+  println!("{parser:#?}");
 
   Ok(())
 }

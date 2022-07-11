@@ -4,8 +4,16 @@ use std::collections::HashMap;
 use std::fs::OpenOptions;
 use std::io::ErrorKind;
 use std::path::PathBuf;
+use serde::{Deserialize, Serialize};
 
-pub type CacheData = HashMap<String, Mod>;
+pub type CacheData = HashMap<String, CacheMod>;
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct CacheMod {
+  pub version_id: String,
+  #[serde(flatten)]
+  pub data: Mod,
+}
 
 pub struct Cache {
   file: PathBuf,
@@ -37,9 +45,17 @@ impl Cache {
     }
   }
 
-  pub fn write_all(&mut self, data: CacheData) {
+  pub fn set_data(&mut self, data: CacheData) {
     self.data = data;
     self.is_dirty = true;
+  }
+
+  pub fn get_data(&self) -> &CacheData {
+    &self.data
+  }
+
+  pub fn get_mod(&self) {
+
   }
 
   pub fn save(&self) -> Result<(), Error> {

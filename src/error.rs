@@ -39,6 +39,8 @@ pub enum ErrorKind {
   #[error("{0}")]
   MinReq(minreq::Error),
   #[error("{0}")]
+  TextParserError(#[from] crate::parser::text::ParseError),
+  #[error("{0}")]
   Other(String),
 }
 

@@ -1,4 +1,4 @@
-use crate::parser::{CurseforgeId, ModrinthId, Parser};
+use crate::parser::{CurseForgeId, ModrinthId, Parser};
 use crate::Error;
 use itertools::Itertools;
 use serde::{Deserialize, Serialize};
@@ -24,7 +24,7 @@ pub struct PackwizModUpdateModrinth {
 #[serde(rename_all = "kebab-case")]
 pub struct PackwizModUpdateCurseforge {
   pub file_id: u32,
-  pub project_id: u32,
+  pub project_id: i32,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -35,9 +35,10 @@ pub struct PackwizMod {
   pub update: PackwizModUpdate,
 }
 
+#[derive(Debug, Clone)]
 pub struct PackwizParser {
   pub modrinth_mods: Vec<ModrinthId>,
-  pub curseforge_mods: Vec<CurseforgeId>,
+  pub curseforge_mods: Vec<CurseForgeId>,
 }
 
 impl PackwizParser {
@@ -82,7 +83,7 @@ impl PackwizParser {
     let curseforge_mods = parsed_mods
       .into_iter()
       .filter_map(|m| m.update.curseforge)
-      .map(|data| CurseforgeId {
+      .map(|data| CurseForgeId {
         version_id: data.file_id.to_string(),
         id: data.project_id,
       })
@@ -100,7 +101,7 @@ impl Parser for PackwizParser {
     self.modrinth_mods.clone()
   }
 
-  fn get_curseforge_mods(&self) -> Vec<CurseforgeId> {
+  fn get_curseforge_mods(&self) -> Vec<CurseForgeId> {
     self.curseforge_mods.clone()
   }
 }

@@ -69,5 +69,11 @@ where
     .send()
     .map_err(crate::error!())?;
 
-  crate::request_returns!(response, ResponseJson).map(|mods| mods.data)
+  match response.status_code {
+    200 => response
+      .json::<ResponseJson>()
+      .map_err(crate::error!())
+      .map(|m| m.data),
+    _ => Err(crate::error!(response)),
+  }
 }

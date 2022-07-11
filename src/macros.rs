@@ -1,4 +1,3 @@
-
 #[macro_export]
 macro_rules! location {
   () => {
@@ -21,21 +20,10 @@ macro_rules! error {
       kind: $msg.into(),
     }
   };
-}
-
-#[macro_export]
-macro_rules! request_returns {
-  ($r:expr) => {
-    match $r.status_code {
-      200 => $r.json().map_err($crate::error!()),
-      _ => Err($crate::error!($r)),
-    }
-  };
-
-  ($r:expr, $T:tt) => {
-    match $r.status_code {
-      200 => $r.json::<$T>().map_err($crate::error!()),
-      _ => Err($crate::error!($r)),
+  (from $var:tt($($arg:expr),*)) => {
+    $crate::error::Error {
+      at: $crate::location!(),
+      kind: $crate::error::ErrorKind::$var($($arg.into()),*),
     }
   };
 }

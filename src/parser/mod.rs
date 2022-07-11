@@ -1,4 +1,5 @@
 pub mod packwiz;
+pub mod text;
 
 #[derive(Debug, Clone)]
 pub struct ModrinthId {
@@ -7,12 +8,12 @@ pub struct ModrinthId {
 }
 
 #[derive(Debug, Clone)]
-pub struct CurseforgeId {
+pub struct CurseForgeId {
   pub version_id: String,
-  pub id: u32,
+  pub id: i32,
 }
 
 pub trait Parser {
   fn get_modrinth_mods(&self) -> Vec<ModrinthId>;
-  fn get_curseforge_mods(&self) -> Vec<CurseforgeId>;
+  fn get_curseforge_mods(&self) -> Vec<CurseForgeId>;
 }
