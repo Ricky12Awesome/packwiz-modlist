@@ -50,13 +50,12 @@ pub struct ModLogo {
 }
 
 pub fn post_curseforge(endpoint: &str) -> Request {
-  post(format!("{CURSEFORGE_API}{endpoint}"))
-    .with_header("x-api-key", CURSEFORGE_API_KEY)
+  post(format!("{CURSEFORGE_API}{endpoint}")).with_header("x-api-key", CURSEFORGE_API_KEY)
 }
 
 pub fn get_curseforge_mods<T>(ids: &T) -> Result<Mods, Error>
 where
-  T: IntoIterator<Item = u32> + Serialize,
+  T: Serialize,
 {
   #[derive(Serialize, Deserialize, Debug, Clone)]
   #[serde(rename_all = "camelCase")]

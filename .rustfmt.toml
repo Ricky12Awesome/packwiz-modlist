@@ -1,4 +1,4 @@
-max_width = 80
+max_width = 100
 
 # Tab space of 4 is way too big, 2 is what it should be
 tab_spaces = 2

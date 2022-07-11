@@ -10,13 +10,7 @@ pub struct Error {
 
 impl Display for Error {
   fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-    Display::fmt(&"[".bright_cyan(), f)?;
-    Display::fmt(&self.at, f)?;
-    Display::fmt(&"]".bright_cyan(), f)?;
-    f.write_str(" ")?;
-    Display::fmt(&self.msg, f)?;
-
-    Ok(())
+    write!(f, "[{}] {}", self.at, self.msg)
   }
 }
 
@@ -29,13 +23,7 @@ pub struct Location {
 
 impl Display for Location {
   fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-    Display::fmt(&self.file.bright_purple(), f)?;
-    Display::fmt(&":".bright_cyan(), f)?;
-    Display::fmt(&self.line.to_string().bright_magenta(), f)?;
-    Display::fmt(&":".bright_cyan(), f)?;
-    Display::fmt(&self.col.to_string().bright_magenta(), f)?;
-
-    Ok(())
+    write!(f, "{}:{}:{}", self.file, self.line, self.col)
   }
 }
 
@@ -47,13 +35,7 @@ pub struct ErrorMessage {
 
 impl Display for ErrorMessage {
   fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-    Display::fmt(&"[".bright_cyan(), f)?;
-    Display::fmt(&self.source.bright_yellow(), f)?;
-    Display::fmt(&"]".bright_cyan(), f)?;
-    f.write_str(" ")?;
-    Display::fmt(&self.message, f)?;
-
-    Ok(())
+    write!(f, "[{}] {}", self.source, self.message)
   }
 }
 
@@ -107,6 +89,24 @@ impl From<(&str, serde_json::Error)> for ErrorMessage {
     Self {
       source: "SerdeJson",
       message: format!("{err}: \n{json}"),
+    }
+  }
+}
+
+impl From<toml::de::Error> for ErrorMessage {
+  fn from(err: toml::de::Error) -> Self {
+    Self {
+      source: "Toml",
+      message: err.to_string(),
+    }
+  }
+}
+
+impl From<(&str, toml::de::Error)> for ErrorMessage {
+  fn from((toml, err): (&str, toml::de::Error)) -> Self {
+    Self {
+      source: "Toml",
+      message: format!("{err}: \n{toml}"),
     }
   }
 }
