@@ -1,5 +1,6 @@
 use std::fmt::{Display, Formatter};
 use std::path::PathBuf;
+use minreq::Response;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -65,6 +66,15 @@ impl From<minreq::Error> for ErrorKind {
   fn from(err: minreq::Error) -> Self {
     match err {
       minreq::Error::SerdeJsonError(err) => err.into(),
+      err => Self::MinReq(err),
+    }
+  }
+}
+
+impl From<(&str, minreq::Error)> for ErrorKind {
+  fn from((res, err): (&str, minreq::Error)) -> Self {
+    match err {
+      minreq::Error::SerdeJsonError(err) => (res, err).into(),
       err => Self::MinReq(err),
     }
   }

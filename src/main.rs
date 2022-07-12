@@ -37,7 +37,8 @@ fn run() -> Result<(), Error> {
   let cache = Cache::load(".packwiz-modlist.cache.json")?;
   // Sodium: AANobbMI (MR)
   // JEI: 238222 (CF)
-  let parser = TextParser::new("mr:AANobbMI:cache_id_here\ncf:238222:cache_id_here")?;
+  // let parser = TextParser::new("mr:AANobbMI:cache_id_here\ncf:238222:cache_id_here")?;
+  let parser = PackwizParser::load_from(r"C:\Users\ricky\dev\modpacks\OptiCraft\mods")?;
   let app = App::new(cache, parser);
 
   if let Err(err) = app.run() {

@@ -1,6 +1,6 @@
 use crate::consts::{CURSEFORGE_API, CURSEFORGE_API_KEY};
 use crate::error::Error;
-use crate::request::{CurseForgeId, post};
+use crate::request::{post, CurseForgeId};
 use minreq::Request;
 use serde::{Deserialize, Serialize};
 
@@ -69,7 +69,10 @@ pub fn get_curseforge_mods(ids: Vec<CurseForgeId>) -> Result<Mods, Error> {
   match response.status_code {
     200 => response
       .json::<ResponseJson>()
-      .map_err(crate::error!())
+      .map_err(|err| match response.as_str().map_err(crate::error!()) {
+        Ok(json) => crate::error!((json, err)),
+        Err(err) => err,
+      })
       .map(|m| m.data),
     _ => Err(crate::error!(response)),
   }

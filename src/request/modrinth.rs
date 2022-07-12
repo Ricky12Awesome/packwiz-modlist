@@ -26,7 +26,7 @@ pub struct Project {
 pub struct ProjectLicense {
   pub id: String,
   pub name: String,
-  pub url: String,
+  pub url: Option<String>,
 }
 
 pub fn get_modrinth(endpoint: &str) -> Request {
@@ -41,7 +41,12 @@ pub fn get_modrinth_projects(projects: Vec<ModrinthId>) -> Result<Projects, Erro
     .unwrap();
 
   match response.status_code {
-    200 => response.json().map_err(crate::error!()),
+    200 => response
+      .json()
+      .map_err(|err| match response.as_str().map_err(crate::error!()) {
+        Ok(json) => crate::error!((json, err)),
+        Err(err) => err,
+      }),
     _ => Err(crate::error!(response)),
   }
 }

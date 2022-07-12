@@ -88,7 +88,7 @@ pub struct Author {
 pub struct License {
   pub id: String,
   pub name: String,
-  pub url: String,
+  pub url: Option<String>,
 }
 
 impl From<modrinth::Project> for Mod {
