@@ -1,6 +1,6 @@
 use crate::consts::{CURSEFORGE_API, CURSEFORGE_API_KEY};
 use crate::error::Error;
-use crate::request::post;
+use crate::request::{CurseForgeId, post};
 use minreq::Request;
 use serde::{Deserialize, Serialize};
 
@@ -53,10 +53,7 @@ pub fn post_curseforge(endpoint: &str) -> Request {
   post(format!("{CURSEFORGE_API}{endpoint}")).with_header("x-api-key", CURSEFORGE_API_KEY)
 }
 
-pub fn get_curseforge_mods<T>(ids: &T) -> Result<Mods, Error>
-where
-  T: Serialize,
-{
+pub fn get_curseforge_mods(ids: Vec<CurseForgeId>) -> Result<Mods, Error> {
   #[derive(Serialize, Deserialize, Debug, Clone)]
   #[serde(rename_all = "camelCase")]
   struct ResponseJson {

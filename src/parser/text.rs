@@ -1,11 +1,10 @@
-use crate::parser::{CurseForgeId, ModrinthId, Parser};
+use crate::parser::{ParsedCurseForgeId, ParsedModrinthId, Parser};
 use crate::Error;
-use itertools::Itertools;
 
 #[derive(Debug, Clone)]
 pub struct TextParser {
-  pub modrinth_mods: Vec<ModrinthId>,
-  pub curseforge_mods: Vec<CurseForgeId>,
+  pub modrinth_mods: Vec<ParsedModrinthId>,
+  pub curseforge_mods: Vec<ParsedCurseForgeId>,
 }
 
 enum ParsedLine {
@@ -59,15 +58,19 @@ impl TextParser {
       .collect::<Result<Vec<_>, _>>()
       .map_err(crate::error!())?;
 
-    let mut modrinth_mods: Vec<ModrinthId> = Vec::with_capacity(result.len());
-    let mut curseforge_mods: Vec<CurseForgeId> = Vec::with_capacity(result.len());
+    let mut modrinth_mods: Vec<ParsedModrinthId> = Vec::with_capacity(result.len());
+    let mut curseforge_mods: Vec<ParsedCurseForgeId> = Vec::with_capacity(result.len());
 
     for line in result {
       match line {
-        ParsedLine::Modrinth(id, version_id) => modrinth_mods.push(ModrinthId { id, version_id }),
-        ParsedLine::CurseForge(id, version_id) => {
-          curseforge_mods.push(CurseForgeId { id, version_id })
-        }
+        ParsedLine::Modrinth(id, version_id) => modrinth_mods.push(ParsedModrinthId {
+          id,
+          cache_id: version_id,
+        }),
+        ParsedLine::CurseForge(id, version_id) => curseforge_mods.push(ParsedCurseForgeId {
+          id,
+          cache_id: version_id,
+        }),
       }
     }
 
@@ -79,11 +82,15 @@ impl TextParser {
 }
 
 impl Parser for TextParser {
-  fn get_modrinth_mods(&self) -> Vec<ModrinthId> {
+  fn get_mods_owned(self) -> (Vec<ParsedModrinthId>, Vec<ParsedCurseForgeId>) {
+    (self.modrinth_mods, self.curseforge_mods)
+  }
+
+  fn get_modrinth_mods(&self) -> Vec<ParsedModrinthId> {
     self.modrinth_mods.clone()
   }
 
-  fn get_curseforge_mods(&self) -> Vec<CurseForgeId> {
+  fn get_curseforge_mods(&self) -> Vec<ParsedCurseForgeId> {
     self.curseforge_mods.clone()
   }
 }

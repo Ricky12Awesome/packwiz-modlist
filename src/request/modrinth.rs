@@ -1,9 +1,8 @@
 use crate::consts::MODRINTH_API;
 use crate::error::Error;
-use crate::request::get;
-use minreq::{Request, URL};
+use crate::request::{get, ModrinthId};
+use minreq::Request;
 use serde::{Deserialize, Serialize};
-use std::fmt::Display;
 
 pub type Projects = Vec<Project>;
 
@@ -34,11 +33,8 @@ pub fn get_modrinth(endpoint: &str) -> Request {
   get(format!("{MODRINTH_API}{endpoint}"))
 }
 
-pub fn get_modrinth_projects<T>(projects: &T) -> Result<Projects, Error>
-where
-  T: Serialize,
-{
-  let json = serde_json::to_string(projects).map_err(crate::error!())?;
+pub fn get_modrinth_projects(projects: Vec<ModrinthId>) -> Result<Projects, Error> {
+  let json = serde_json::to_string(&projects).map_err(crate::error!())?;
   let response = get_modrinth("/projects")
     .with_param("ids", json)
     .send()

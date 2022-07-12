@@ -1,4 +1,5 @@
 use crate::consts::USER_AGENT;
+use crate::parser::{ParsedCurseForgeId, ParsedModrinthId};
 use minreq::{Request, URL};
 use serde::{Deserialize, Serialize};
 
@@ -17,6 +18,42 @@ pub fn post<T: Into<URL>>(url: T) -> Request {
     .with_header("User-Agent", USER_AGENT)
     .with_header("Content-Type", "application/json")
     .with_header("Accept", "application/json")
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct ModrinthId(pub String);
+
+impl From<&str> for ModrinthId {
+  fn from(id: &str) -> Self {
+    Self(id.to_string())
+  }
+}
+
+impl From<String> for ModrinthId {
+  fn from(id: String) -> Self {
+    Self(id)
+  }
+}
+
+impl From<ParsedModrinthId> for ModrinthId {
+  fn from(id: ParsedModrinthId) -> Self {
+    Self(id.id)
+  }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct CurseForgeId(pub i32);
+
+impl From<i32> for CurseForgeId {
+  fn from(id: i32) -> Self {
+    Self(id)
+  }
+}
+
+impl From<ParsedCurseForgeId> for CurseForgeId {
+  fn from(id: ParsedCurseForgeId) -> Self {
+    Self(id.id)
+  }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]

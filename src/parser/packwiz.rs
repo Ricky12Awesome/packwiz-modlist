@@ -1,4 +1,4 @@
-use crate::parser::{CurseForgeId, ModrinthId, Parser};
+use crate::parser::{ParsedCurseForgeId, ParsedModrinthId, Parser};
 use crate::Error;
 use itertools::Itertools;
 use serde::{Deserialize, Serialize};
@@ -37,8 +37,8 @@ pub struct PackwizMod {
 
 #[derive(Debug, Clone)]
 pub struct PackwizParser {
-  pub modrinth_mods: Vec<ModrinthId>,
-  pub curseforge_mods: Vec<CurseForgeId>,
+  pub modrinth_mods: Vec<ParsedModrinthId>,
+  pub curseforge_mods: Vec<ParsedCurseForgeId>,
 }
 
 impl PackwizParser {
@@ -74,8 +74,8 @@ impl PackwizParser {
       .clone()
       .into_iter()
       .filter_map(|m| m.update.modrinth)
-      .map(|data| ModrinthId {
-        version_id: data.version,
+      .map(|data| ParsedModrinthId {
+        cache_id: data.version,
         id: data.mod_id,
       })
       .collect();
@@ -83,8 +83,8 @@ impl PackwizParser {
     let curseforge_mods = parsed_mods
       .into_iter()
       .filter_map(|m| m.update.curseforge)
-      .map(|data| CurseForgeId {
-        version_id: data.file_id.to_string(),
+      .map(|data| ParsedCurseForgeId {
+        cache_id: data.file_id.to_string(),
         id: data.project_id,
       })
       .collect();
@@ -97,11 +97,15 @@ impl PackwizParser {
 }
 
 impl Parser for PackwizParser {
-  fn get_modrinth_mods(&self) -> Vec<ModrinthId> {
+  fn get_mods_owned(self) -> (Vec<ParsedModrinthId>, Vec<ParsedCurseForgeId>) {
+    (self.modrinth_mods, self.curseforge_mods)
+  }
+
+  fn get_modrinth_mods(&self) -> Vec<ParsedModrinthId> {
     self.modrinth_mods.clone()
   }
 
-  fn get_curseforge_mods(&self) -> Vec<CurseForgeId> {
+  fn get_curseforge_mods(&self) -> Vec<ParsedCurseForgeId> {
     self.curseforge_mods.clone()
   }
 }

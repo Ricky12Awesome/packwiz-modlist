@@ -1,5 +1,4 @@
-use colored::{ColoredString, Colorize};
-use std::fmt::{Display, Formatter, Write};
+use std::fmt::{Display, Formatter};
 use std::path::PathBuf;
 use thiserror::Error;
 

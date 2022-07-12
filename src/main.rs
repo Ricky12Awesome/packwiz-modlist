@@ -1,16 +1,14 @@
-#![allow(unused)] // ignore warning
+#![allow(unused)]
 
+use crate::app::App;
 use crate::cache::Cache;
 use crate::error::Error;
 use crate::parser::packwiz::PackwizParser;
+use crate::parser::Parser;
 use crate::parser::text::TextParser;
 use crate::request::curseforge::get_curseforge_mods;
 use crate::request::modrinth::get_modrinth_projects;
 use crate::request::Mod;
-use itertools::Itertools;
-use log::Log;
-use std::collections::HashMap;
-use std::ops::Index;
 
 mod app;
 mod args;
@@ -31,29 +29,24 @@ fn setup_logging() {
   colored::control::set_override(true);
 
   #[cfg(windows)]
-  colored::control::set_virtual_terminal(true);
+  colored::control::set_virtual_terminal(true).unwrap();
 }
 
 fn run() -> Result<(), Error> {
-  // let mut cache = Cache::load(".packwizml.cache.json")?;
-  //
-  // // Sodium
-  // let mr_projects = get_modrinth_projects(&["AANobbMI"])?;
-  //
-  // // JEI
-  // let cf_projects = get_curseforge_mods(&[238222])?;
-  //
-  // let mr_project: Mod = mr_projects[0].clone().into();
-  // let cf_project: Mod = cf_projects[0].clone().into();
-  //
-  // let mods = vec![mr_project, cf_project];
-  //
-  // cache.save()?;
 
-  let parser = PackwizParser::load_from(r"C:\Users\ricky\dev\modpacks\OptiCraft\mods")?;
-  // let parser = TextParser::new("mr:AANobbMI\ncf:238222")?;
+  let cache = Cache::load(".packwiz-modlist.cache.json")?;
+  // Sodium: AANobbMI (MR)
+  // JEI: 238222 (CF)
+  let parser = TextParser::new("mr:AANobbMI:cache_id_here\ncf:238222:cache_id_here")?;
+  let app = App::new(cache, parser);
 
-  println!("{parser:#?}");
+  if let Err(err) = app.run() {
+    log::error!("{err}");
+  }
+
+  if let Err(err) = app.close() {
+    log::error!("{err}");
+  }
 
   Ok(())
 }
