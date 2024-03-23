@@ -23,20 +23,20 @@ path = "src/main.rs"
 
 [dependencies]
 
-clap = { version = "3.2", features = ["cargo", "derive"] }
+clap = { version = "4.5", features = ["cargo", "derive"] }
 
-minreq = { version = "2.6", features = ["https-rustls", "json-using-serde", "urlencoding"] }
+minreq = { version = "2.11", features = ["https-rustls", "json-using-serde", "urlencoding"] }
 
 serde = { version = "1.0", features = ["derive"] }
-serde_with = { version = "1.14", default-features = false }
+serde_with = "3.7"
 serde_json = "1.0"
-toml = "0.5"
+toml = "0.8"
 
-itertools = "0.10"
+itertools = "0.12"
 thiserror = "1.0"
-colored = "2.0"
+colored = "2.1"
 log = "0.4"
-simple_logger = "2.2"
+simple_logger = "4.3"
 
 [build-dependencies]
 dotenv-build = "0.1"

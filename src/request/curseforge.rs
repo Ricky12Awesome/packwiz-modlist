@@ -18,16 +18,18 @@ pub struct Mod {
   pub logo: ModLogo,
 }
 
+
+#[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct ModLinks {
-  #[serde(with = "serde_with::rust::string_empty_as_none")]
+  #[serde_as(as = "serde_with::NoneAsEmptyString")]
   pub website_url: Option<String>,
-  #[serde(with = "serde_with::rust::string_empty_as_none")]
+  #[serde_as(as = "serde_with::NoneAsEmptyString")]
   pub wiki_url: Option<String>,
-  #[serde(with = "serde_with::rust::string_empty_as_none")]
+  #[serde_as(as = "serde_with::NoneAsEmptyString")]
   pub issues_url: Option<String>,
-  #[serde(with = "serde_with::rust::string_empty_as_none")]
+  #[serde_as(as = "serde_with::NoneAsEmptyString")]
   pub source_url: Option<String>,
 }
 

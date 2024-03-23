@@ -52,21 +52,9 @@ impl PackwizParser {
       .map_err(|err| crate::error!((directory, err)))?
       .map(|entry| entry.map_err(crate::error!()))
       .filter_ok(|entry| entry.file_name().to_string_lossy().ends_with(".pw.toml"))
-      .map_ok(|entry| {
-        OpenOptions::new()
-          .read(true)
-          .open(entry.path())
-          .map_err(crate::error!())
-      })
+      .map_ok(|entry| std::fs::read_to_string(entry.path()).map_err(crate::error!()))
       .flatten()
-      .map_ok(|file| {
-        file
-          .bytes()
-          .collect::<Result<Vec<u8>, _>>()
-          .map_err(crate::error!())
-      })
-      .flatten()
-      .map_ok(|bytes| toml::from_slice::<PackwizMod>(&bytes).map_err(crate::error!()))
+      .map_ok(|data| toml::from_str::<PackwizMod>(&data).map_err(crate::error!()))
       .flatten()
       .collect::<Result<Vec<_>, _>>()?;
 
