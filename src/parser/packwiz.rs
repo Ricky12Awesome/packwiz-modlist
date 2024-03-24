@@ -48,13 +48,12 @@ impl PackwizParser {
   {
     let directory = directory.into();
     let parsed_mods = directory
-      .read_dir()
-      .map_err(|err| crate::error!((directory, err)))?
-      .map(|entry| entry.map_err(crate::error!()))
+      .read_dir()?
+      .map_ok(|entry| entry)
       .filter_ok(|entry| entry.file_name().to_string_lossy().ends_with(".pw.toml"))
-      .map_ok(|entry| std::fs::read_to_string(entry.path()).map_err(crate::error!()))
+      .map_ok(|entry| std::fs::read_to_string(entry.path()))
       .flatten()
-      .map_ok(|data| toml::from_str::<PackwizMod>(&data).map_err(crate::error!()))
+      .map_ok(|data| toml::from_str::<PackwizMod>(&data))
       .flatten()
       .collect::<Result<Vec<_>, _>>()?;
 

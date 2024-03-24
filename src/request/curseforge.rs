@@ -63,19 +63,17 @@ pub fn get_curseforge_mods(ids: Vec<CurseForgeId>) -> Result<Mods, Error> {
   }
 
   let response = post_curseforge("/mods")
-    .with_json(&serde_json::json!({ "modIds": ids }))
-    .map_err(crate::error!())?
-    .send()
-    .map_err(crate::error!())?;
+    .with_json(&serde_json::json!({ "modIds": ids }))?
+    .send()?;
 
   match response.status_code {
     200 => response
       .json::<ResponseJson>()
-      .map_err(|err| match response.as_str().map_err(crate::error!()) {
-        Ok(json) => crate::error!((json, err)),
-        Err(err) => err,
-      })
+      .map_err(|err| (match response.as_str() {
+        Ok(json) => (json, err).into(),
+        Err(err) => err.into(),
+      }))
       .map(|m| m.data),
-    _ => Err(crate::error!(response)),
+    _ => Err(response.into()),
   }
 }

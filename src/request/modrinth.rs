@@ -34,7 +34,7 @@ pub fn get_modrinth(endpoint: &str) -> Request {
 }
 
 pub fn get_modrinth_projects(projects: Vec<ModrinthId>) -> Result<Projects, Error> {
-  let json = serde_json::to_string(&projects).map_err(crate::error!())?;
+  let json = serde_json::to_string(&projects)?;
   let response = get_modrinth("/projects")
     .with_param("ids", json)
     .send()
@@ -43,10 +43,10 @@ pub fn get_modrinth_projects(projects: Vec<ModrinthId>) -> Result<Projects, Erro
   match response.status_code {
     200 => response
       .json()
-      .map_err(|err| match response.as_str().map_err(crate::error!()) {
-        Ok(json) => crate::error!((json, err)),
-        Err(err) => err,
+      .map_err(|err| match response.as_str() {
+        Ok(json) => (json, err).into(),
+        Err(err) => err.into(),
       }),
-    _ => Err(crate::error!(response)),
+    _ => Err(response.into()),
   }
 }

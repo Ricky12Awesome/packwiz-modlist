@@ -57,7 +57,7 @@ impl Cache {
       Ok(reader) => Ok(Self {
         file,
         is_dirty: false,
-        data: serde_json::from_reader(reader).map_err(crate::error!())?,
+        data: serde_json::from_reader(reader)?,
       }),
       Err(err) => match err.kind() {
         ErrorKind::NotFound => Ok(Self {
@@ -65,7 +65,7 @@ impl Cache {
           is_dirty: false,
           data: Default::default(),
         }),
-        _ => Err(crate::error!(err)),
+        _ => Err(err)?,
       },
     }
   }
@@ -114,10 +114,9 @@ impl Cache {
       let file = OpenOptions::new()
         .write(true)
         .create(true)
-        .open(&self.file)
-        .map_err(crate::error!())?;
+        .open(&self.file)?;
 
-      serde_json::to_writer(file, &self.data).map_err(crate::error!())?;
+      serde_json::to_writer(file, &self.data)?;
     }
 
     Ok(())

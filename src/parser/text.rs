@@ -55,8 +55,7 @@ impl TextParser {
       .filter(|(_, line)| !line.starts_with('#'))
       .filter(|(_, line)| !line.starts_with("//"))
       .map(parse_line)
-      .collect::<Result<Vec<_>, _>>()
-      .map_err(crate::error!())?;
+      .collect::<Result<Vec<_>, _>>()?;
 
     let mut modrinth_mods: Vec<ParsedModrinthId> = Vec::with_capacity(result.len());
     let mut curseforge_mods: Vec<ParsedCurseForgeId> = Vec::with_capacity(result.len());
