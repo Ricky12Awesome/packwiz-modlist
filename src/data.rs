@@ -1,6 +1,4 @@
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::Read;
 use std::path::Path;
 
 use itertools::Itertools;
@@ -9,24 +7,23 @@ use serde::de::DeserializeOwned;
 
 use GlobalError::Validation;
 
+use crate::Args;
 use crate::cache::Cache;
-use crate::error::ValidationError::{DirNotExist, MustBeDir, PackNotFound};
 use crate::error::{GlobalError, GlobalResult};
+use crate::error::ValidationError::{DirNotExist, MustBeDir, PackNotFound};
 use crate::object::{
-  CurseForgeProject, CurseforgeModIds, CurseforgeMods, ModrinthProject, Pack, PackMod, PackMods,
+  CurseforgeModIds, CurseforgeMods, CurseForgeProject, ModrinthProject, Pack, PackMod, PackMods,
   Project,
 };
-use crate::Args;
 
 const CURSEFORGE_API_KEY: &str = env!("CF_API_KEY");
 const CURSEFORGE_API: &str = "https://api.curseforge.com/v1";
 const MODRINTH_API: &str = "https://api.modrinth.com/v2";
 
 pub fn read_toml_file<T: DeserializeOwned, P: AsRef<Path>>(path: P) -> GlobalResult<T> {
-  let file = File::open(path)?;
-  let bytes = file.bytes().collect::<Result<Vec<_>, _>>()?;
+  let data = std::fs::read_to_string(path)?;
 
-  toml::from_slice::<T>(&bytes).map_err(GlobalError::from)
+  toml::from_str::<T>(&data).map_err(GlobalError::from)
 }
 
 pub fn get_mods(args: &Args) -> GlobalResult<PackMods> {

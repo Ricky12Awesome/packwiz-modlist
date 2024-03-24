@@ -9,6 +9,14 @@ const LOG_VALUES: [&str; 6] = ["Off", "Error", "Warn", "Info", "Debug", "Trace"]
 const COLOR_MODES: [&str; 3] = ["Auto", "Always", "Never"];
 const SORTING_MODES: [&str; 4] = ["Name", "Title", "Slug", "Id"];
 
+macro_rules! possible_values_parser {
+  ($t:ty: $values:expr) => {{
+    use clap::builder::TypedValueParser;
+
+    clap::builder::PossibleValuesParser::new($values).map(|s| s.parse::<$t>().unwrap())
+  }};
+}
+
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 pub struct Args {
@@ -16,7 +24,7 @@ pub struct Args {
   #[clap(long, short = 'p', default_value = "./", value_hint = clap::ValueHint::DirPath)]
   pub path: PathBuf,
   /// Set the cache file
-  #[clap(long, default_value = "./.packwizml.cache")]
+  #[clap(long, default_value = "./.packwiz-modlist.cache.json")]
   pub cache: PathBuf,
   /// Path to the directory contains all the mod metadata files
   #[clap(long, short = 'm', default_value = "mods", value_hint = clap::ValueHint::DirPath)]
@@ -34,13 +42,22 @@ pub struct Args {
   #[clap(long, short = 'F')]
   pub force: bool,
   /// Sets the verbosity of logging
-  #[clap(long, short = 'v', ignore_case = true, default_value = "Warn", possible_values = LOG_VALUES)]
+  #[clap(
+    long, short = 'v', ignore_case = true, default_value = "Warn",
+    value_parser = possible_values_parser!(LevelFilter: LOG_VALUES)
+  )]
   pub log_level: LevelFilter,
   /// Sets the color mode
-  #[clap(long, short = 'c', ignore_case = true, default_value = "Auto", possible_values = COLOR_MODES)]
+  #[clap(
+    long, short = 'c', ignore_case = true, default_value = "Auto", 
+    value_parser = possible_values_parser!(ColorMode: COLOR_MODES)
+  )]
   pub color_mode: ColorMode,
   /// Sets the sorting mode
-  #[clap(long, short = 's', ignore_case = true, possible_values = SORTING_MODES)]
+  #[clap(
+    long, short = 's', ignore_case = true,
+    value_parser = possible_values_parser!(SortingMode: SORTING_MODES)
+  )]
   pub sort_by: Option<SortingMode>,
   /// Sets if sorting should be reverse
   #[clap(long, short = 'r')]
