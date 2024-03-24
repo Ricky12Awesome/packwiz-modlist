@@ -1,3 +1,5 @@
+extern crate core;
+
 use std::fmt::Display;
 
 use cache::Cache;

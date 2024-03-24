@@ -12,8 +12,8 @@ use crate::cache::Cache;
 use crate::error::{GlobalError, GlobalResult};
 use crate::error::ValidationError::{DirNotExist, MustBeDir, PackNotFound};
 use crate::object::{
-  CurseforgeModIds, CurseforgeMods, CurseForgeProject, ModrinthProject, Pack, PackMod, PackMods,
-  Project,
+  CurseforgeModIds, CurseforgeMods, CurseForgeProject, ModrinthProject,
+  ModrinthTeamMember, Pack, PackMods, Project,
 };
 
 const CURSEFORGE_API_KEY: &str = env!("CF_API_KEY");
@@ -62,38 +62,67 @@ pub fn get_data(args: &Args) -> GlobalResult<(Pack, PackMods)> {
   }
 }
 
-#[allow(unused)]
-async fn request_modrinth_project(id: &str) -> GlobalResult<ModrinthProject> {
-  let url = format!("{MODRINTH_API}/project/{id}");
-  let response = reqwest::get(url).await?;
-  let project = response.json().await?;
+// #[allow(unused)]
+// async fn request_modrinth_project(id: &str) -> GlobalResult<ModrinthProject> {
+//   let url = format!("{MODRINTH_API}/project/{id}");
+//   let response = reqwest::get(url).await?;
+//   let project = response.json().await?;
+//
+//   Ok(project)
+// }
 
-  Ok(project)
+async fn request_modrinth_teams(ids: Vec<String>) -> GlobalResult<Vec<Vec<ModrinthTeamMember>>> {
+  let ids = serde_json::to_string(&ids)?;
+  let url = format!("{MODRINTH_API}/teams?ids={ids}");
+  let response = reqwest::get(url).await?;
+
+  let team = response.json().await?;
+
+  Ok(team)
 }
 
 async fn request_modrinth_projects(ids: Vec<String>) -> GlobalResult<Vec<ModrinthProject>> {
   let ids = serde_json::to_string(&ids)?;
   let url = format!("{MODRINTH_API}/projects?ids={ids}");
   let response = reqwest::get(url).await?;
-  let project = response.json().await?;
+  let projects: Vec<ModrinthProject> = response.json().await?;
 
-  Ok(project)
+  let mut teams_map = projects
+    .into_iter()
+    .into_group_map_by(|project| project.team.clone());
+
+  let ids = teams_map.keys().cloned().collect_vec();
+  let teams = request_modrinth_teams(ids).await?;
+
+  for team in teams.iter() {
+    for member in team.iter() {
+      let projects = teams_map.get_mut(&member.team_id).unwrap();
+
+      for project in projects {
+        project.team_members.push(member.clone());
+      }
+    }
+  }
+
+  let projects = teams_map.into_values().flatten().collect_vec();
+
+  Ok(projects)
 }
 
-#[allow(unused)]
-async fn request_curseforge_project(id: u32) -> GlobalResult<CurseForgeProject> {
-  let url = format!("{CURSEFORGE_API}/mods/{id}");
-  let response = Client::builder()
-    .build()?
-    .get(url)
-    .header("x-api-key", CURSEFORGE_API_KEY)
-    .send()
-    .await?;
-
-  let project = response.json().await?;
-
-  Ok(project)
-}
+// #[allow(unused)]
+// async fn request_curseforge_project(id: u32) -> GlobalResult<CurseForgeProject> {
+//   let url = format!("{CURSEFORGE_API}/mods/{id}");
+//   let response = Client::builder()
+//     .build()?
+//     .get(url)
+//     .header("x-api-key", CURSEFORGE_API_KEY)
+//     .send()
+//     .await?;
+//
+//   let project = response.json().await?;
+//
+//   Ok(project)
+// }
 
 async fn request_curseforge_projects(ids: Vec<u32>) -> GlobalResult<Vec<CurseForgeProject>> {
   let ids = CurseforgeModIds { mod_ids: ids };
@@ -106,27 +135,27 @@ async fn request_curseforge_projects(ids: Vec<u32>) -> GlobalResult<Vec<CurseFor
     .send()
     .await?;
 
-  let project: CurseforgeMods = response.json().await?;
+  let projects: CurseforgeMods = response.json().await?;
 
-  Ok(project.data)
+  Ok(projects.data)
 }
 
-#[allow(unused)]
-pub async fn request_project(pack_mod: &PackMod) -> GlobalResult<Project> {
-  if let Some(pack_mod) = &pack_mod.update.modrinth {
-    return request_modrinth_project(&pack_mod.mod_id)
-      .await
-      .map(Project::from);
-  }
-
-  if let Some(pack_mod) = &pack_mod.update.curseforge {
-    return request_curseforge_project(pack_mod.project_id)
-      .await
-      .map(Project::from);
-  }
-
-  unreachable!()
-}
+// #[allow(unused)]
+// pub async fn request_project(pack_mod: &PackMod) -> GlobalResult<Project> {
+//   if let Some(pack_mod) = &pack_mod.update.modrinth {
+//     return request_modrinth_project(&pack_mod.mod_id)
+//       .await
+//       .map(Project::from);
+//   }
+//
+//   if let Some(pack_mod) = &pack_mod.update.curseforge {
+//     return request_curseforge_project(pack_mod.project_id)
+//       .await
+//       .map(Project::from);
+//   }
+//
+//   unreachable!()
+// }
 
 pub async fn get_modrinth_projects(
   cache: &mut Cache,

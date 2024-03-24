@@ -80,6 +80,27 @@ pub struct CurseForgeProject {
   pub slug: String,
   pub name: String,
   pub summary: String,
+  #[serde(default)]
+  pub authors: Vec<CurseForgeAuthor>,
+  pub logo: Option<CurseForgeLogo>
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+// #[serde(rename_all = "camelCase")]
+pub struct CurseForgeAuthor {
+  pub id: u32,
+  pub name: String,
+  pub url: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CurseForgeLogo {
+  pub id: u32,
+  pub mod_id: u32,
+  pub title: String,
+  pub thumbnail_url: String,
+  pub url: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -87,8 +108,30 @@ pub struct CurseForgeProject {
 pub struct ModrinthProject {
   pub id: String,
   pub slug: String,
+  pub team: String,
+  #[serde(default)]
+  pub team_members: Vec<ModrinthTeamMember>,
+  pub icon_url: Option<String>,
+  pub source_url: Option<String>,
   pub title: String,
   pub description: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+// #[serde(rename_all = "camelCase")]
+pub struct ModrinthTeamMember {
+  pub role: String,
+  pub team_id: String,
+  pub user: ModrinthTeamMemberUser,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+// #[serde(rename_all = "camelCase")]
+pub struct ModrinthTeamMemberUser {
+  pub id: String,
+  pub username: String,
+  pub avatar_url: Option<String>,
+  pub bio: Option<String>,
 }
 
 pub type Projects = Vec<Project>;
